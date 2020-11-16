@@ -73,7 +73,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(prompt("Enter a Deviantart URL for 3D viewing"))}&format=jsonp&callback=onDeviantFetch`
       document.body.appendChild(s);
       
-      function onDeviantFetch(response) {
+      window.onDeviantFetch = function(response) {
           scene.addNode(new SkyboxNode({
             url: response.url,
             displayMode: window.location.search.length=="?stereo"?'stereoTopBottom':'mono'
