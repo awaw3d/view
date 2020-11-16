@@ -68,18 +68,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let gl = null;
       let renderer = null;
       let scene = new Scene();
+      scene.enableStats(false);
       
-      let s = document.createElement("script");
-      s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(prompt("Enter a Deviantart URL for 3D viewing"))}&format=jsonp&callback=onDeviantFetch`
-      document.body.appendChild(s);
+      let urlList = prompt("Enter comma-separated Deviantart URL for 3D viewing").split(",");
+      let skyboxes = [];
+      
+      function nextoEmbed = function() {
+          if(!list.length) { embedsDone(); }
+          let s = document.createElement("script");
+          s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(urlList.shift())}&format=jsonp&callback=onDeviantFetch`
+          document.body.appendChild(s);
+      };
+      
+      function embedsDone() {
+          let nextBox = skyboxes.shift();
+          skyboxes.push(nextBox);
+          scene.addNode(nextBox);
+          setTimeout(embedsDone, 10000);
+      }
       
       window.onDeviantFetch = function(response) {
-          scene.addNode(new SkyboxNode({
+          skyboxes.push(new SkyboxNode({
             url: response.url,
             displayMode: window.location.search.length=="?stereo"?'stereoTopBottom':'mono'
           }));
+          nexttoEmbed();
       }
-
+      
+      nextoEmbed();
+      
       function initXR() {
         xrButton = new WebXRButton({
           onRequestSession: onRequestSession,
