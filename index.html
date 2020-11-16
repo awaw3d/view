@@ -36,10 +36,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       <details open>
         <summary>360 Photos</summary>
         <p>
-          This sample demonstrates displaying a 360 degree equirectangular stereo
-          photo. It intentionally suppresses view position to ensure that the user
-          cannot move out of the photo sphere.
-          <a class="back" href="./">Back</a>
+          Use the <code>?urls=</code> parameter to give a comma-separated list of DeviantArt URLs, and the <code>stereo=true</code> parameter to indicate stereo images.
         </p>
       </details>
     </header>
@@ -70,7 +67,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let scene = new Scene();
       scene.enableStats(false);
       
-      let urlList = QueryArgs("urls", prompt("Enter comma-separated Deviantart URL for 3D viewing")).split(",");
+      let urlList = QueryArgs.getString("urls").split(",");
+      if(!urlList) { urlList = prompt("Enter comma-separated Deviantart URL for 3D viewing"); }
       let skyboxes = [];
       let firstDone = false;
       
