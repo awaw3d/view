@@ -68,10 +68,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let gl = null;
       let renderer = null;
       let scene = new Scene();
-      scene.addNode(new SkyboxNode({
-        url: 'media/textures/chess-pano-4k.jpg',
-        displayMode: 'stereoTopBottom'
-      }));
+      
+      let s = document.createElement("script");
+      s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(prompt("Enter a Deviantart URL for 3D viewing"))}&format=jsonp&callback=onDeviantFetch`
+      body.appendChild(s);
+      
+      function onDeviantFetch(response) {
+          scene.addNode(new SkyboxNode({
+            url: response.url,
+            displayMode: window.location.search.length=="?stereo"?'stereoTopBottom':'mono'
+          }));
+      }
 
       function initXR() {
         xrButton = new WebXRButton({
