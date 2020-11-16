@@ -74,7 +74,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let skyboxes = [];
       
       function nextoEmbed() {
-          if(!urlList.length) { embedsDone(); }
+          if(!urlList.length) { embedsDone(); return; }
           let s = document.createElement("script");
           s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(urlList.shift())}&format=jsonp&callback=onDeviantFetch`
           document.body.appendChild(s);
