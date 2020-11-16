@@ -70,11 +70,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let scene = new Scene();
       scene.enableStats(false);
       
-      let urlList = prompt("Enter comma-separated Deviantart URL for 3D viewing").split(",");
+      let urlList = QueryArgs("urls", prompt("Enter comma-separated Deviantart URL for 3D viewing")).split(",");
       let skyboxes = [];
+      let firstDone = false;
       
       function nextoEmbed() {
-          if(!urlList.length) { embedsDone(); return; }
+          if(!firstDone) { embedsDone(); firstDone = true; }
+          if(!urlList.length) { return; }
           let s = document.createElement("script");
           s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(urlList.shift())}&format=jsonp&callback=onDeviantFetch`
           document.body.appendChild(s);
@@ -91,7 +93,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       window.onDeviantFetch = function(response) {
           skyboxes.push(new SkyboxNode({
             url: response.url,
-            displayMode: window.location.search.length=="?stereo"?'stereoTopBottom':'mono'
+            displayMode: QueryArgs.getBool('stereo', false)?'stereoTopBottom':'mono'
           }));
           nextoEmbed();
       }
