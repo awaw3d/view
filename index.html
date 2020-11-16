@@ -83,6 +83,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       function embedsDone() {
           let nextBox = skyboxes.shift();
           skyboxes.push(nextBox);
+          scene.clearNodes();
           scene.addNode(nextBox);
           setTimeout(embedsDone, 10000);
       }
