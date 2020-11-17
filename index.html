@@ -86,13 +86,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           skyboxes.push(nextBox);
           scene.clearNodes();
           scene.addNode(nextBox);
-          setTimeout(embedsDone, QueryArgs.getInt("time", 10) * 1000;);
+          setTimeout(embedsDone, QueryArgs.getInt("time", 10) * 1000);
       }
       
       window.onDeviantFetch = function(response) {
+          let stereo = QueryArgs.getString("stereo");
           skyboxes.push(new SkyboxNode({
             url: response.url,
-            displayMode: QueryArgs.getBool('stereo', false)?'stereoTopBottom':'mono'
+            displayMode: stereo=="top"?'stereoTopBottom':stereo=="side"?'stereoLeftRight':'mono'
           }));
           if(!firstDone) { embedsDone(); firstDone = true; }
           nextoEmbed();
