@@ -67,8 +67,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let scene = new Scene();
       scene.enableStats(false);
       
-      let urlList = QueryArgs.getString("urls").split(",");
+      let urlList = QueryArgs.getString("urls");
       if(!urlList) { urlList = prompt("Enter comma-separated Deviantart URL for 3D viewing"); }
+      urlList = urlList.split(",");
       let skyboxes = [];
       let firstDone = false;
       
