@@ -69,16 +69,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       scene.enableStats(false);
       
       let urlList = QueryArgs.getString("urls");
-      if(!urlList) { urlList = prompt("Enter comma-separated Deviantart URL for 3D viewing"); }
+      if(!urlList) { urlList = prompt("Enter comma-separated Deviantart URLs for 3D viewing"); }
       urlList = urlList.split(",");
       let skyboxes = [];
       let firstDone = false;
       
       function nextoEmbed() {
           if(!urlList.length) { return; }
-          let s = document.createElement("script");
-          s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(urlList.shift())}&format=jsonp&callback=onDeviantFetch`
-          document.body.appendChild(s);
+          var nextURL = urlList.shift();
+          if(nextURL.match(/^https?:\/\/sta\.sh\/|^https?:\/\/deviantart\.com\/|^https?:\/\/fav\.me\//)) {
+              let s = document.createElement("script");
+              s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(nextURL)}&format=jsonp&callback=onDeviantFetch`
+              document.body.appendChild(s);
+          } else {
+              window.onDeviantFetch({ url: nextURL });
+          }
       };
       
       function embedsDone() {
