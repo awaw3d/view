@@ -69,8 +69,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       scene.enableStats(false);
       
       let urlList = QueryArgs.getString("urls");
+      if(!urlList) { urlList = QueryArgs.getString("url"); }
       if(!urlList) { urlList = prompt("Enter comma-separated Deviantart URLs for 3D viewing"); }
       urlList = urlList.split(",");
+      
+      // expects dims=WWWWxHHHH
+      let dims = QueryArgs.getString("dims");
+      if(dims) {
+          dims = dims.split("x");
+          if(dims.length != 2) { dims = undefined; }
+      }
+      
       let skyboxes = [];
       let firstDone = false;
       
@@ -96,8 +105,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       window.onDeviantFetch = function(response, isDirectCall) {
           // if this is an oembed result, turn `q_XX` (quality) parameter up to 100
-          // TODO: turn up `h_` and `w_` to turn image to orginal size (or as big as the endpoint will allow)
-          if(!isDirectCall) { response.url = response.url.replace(/,q_\d+/, ",q_100") }
+          // and if `dims` are provided, scale to those dimensions
+          if(!isDirectCall) {
+            response.url = response.url.replace(/,q_\d+/, ",q_100");
+            if(dims) {
+               response.url = response.url.replace(/fill\/w_\d+,h_\d+/, "fill/w_"+dims[0]+",h_"+dims[1]);
+            }
+          }
+          
           let stereo = QueryArgs.getString("stereo");
           skyboxes.push(new SkyboxNode({
             url: response.url,
