@@ -119,7 +119,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           skyboxes.push(new SkyboxNode({
             url: response.url,
             displayMode: stereo=="top"?'stereoTopBottom':stereo=="side"?'stereoLeftRight':'mono',
-            rotationY: 180
+            rotationY: Math.PI
           }));
           if(!firstDone) { embedsDone(); firstDone = true; }
           nextoEmbed();
