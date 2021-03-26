@@ -35,10 +35,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <body>
     <header>
       <details open>
-        <summary>360 Photos</summary>
-        <p>
-          Use the <code>?urls=</code> parameter to give a comma-separated list of DeviantArt URLs, and the <code>stereo=top</code> or <code>stereo=side</code> parameter to indicate stereo images.
-        </p>
+        <summary>360 Viewer</summary>
+        <ul>
+          <li><code>?urls=</code> - comma-separated list of DeviantArt URLs or image URLs</li>
+          <li><code>&stereo=top</code> or <code>&stereo=side</code> - if using stereo images</li>
+          <li><code>&dims=WWWWxHHHH</code> - width x height dimensions (optional, default is low-quality)</li>
+        </ul>
       </details>
     </header>
     <script type="module">
