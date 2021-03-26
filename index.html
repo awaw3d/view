@@ -118,7 +118,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           let stereo = QueryArgs.getString("stereo");
           skyboxes.push(new SkyboxNode({
             url: response.url,
-            displayMode: stereo=="top"?'stereoTopBottom':stereo=="side"?'stereoLeftRight':'mono'
+            displayMode: stereo=="top"?'stereoTopBottom':stereo=="side"?'stereoLeftRight':'mono',
+            rotationY: 180
           }));
           if(!firstDone) { embedsDone(); firstDone = true; }
           nextoEmbed();
