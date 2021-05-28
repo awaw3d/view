@@ -41,10 +41,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           <li><code>&stereo=top</code> or <code>side</code> - if using stereo images</li>
           <li><code>&dims=WWWxHHH</code> - width x height (optional, for quality)</li>
         </ul>
-        <p>
-          <input id='vertFOV' value='70' min='30' max='150' step='10' type='range'/><br/>
-          <label id='vertFOVLabel' for="vertFOV">FOV: </label>
-        </p>
       </details>
     </header>
     <script type="module">
@@ -75,28 +71,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let scene = new Scene();
       scene.enableStats(false);
       
-      // enable FOV slider
-      let fov = document.getElementById('vertFOV');
-      let fovLabel = document.getElementById('vertFOVLabel');
-      function updateFov() {
-        let value = parseFloat(fov.value);
-        // The inlineVerticalFieldOfView is specified in radians.
-        let radValue = value * (Math.PI / 180);
-
-        if (globalSession) {
-          // As with any values set with updateRenderState, this will take
-          // effect on the next frame.
-          globalSession.updateRenderState({
-            inlineVerticalFieldOfView: radValue
-          });
-        }
-        
-        // Set the label on the page
-        let label = `FOV: ${value} degrees`;
-        fovLabel.textContent = label;
-      }
-      fov.addEventListener('change', updateFov);
-      
       let urlList = QueryArgs.getString("urls");
       if(!urlList) { urlList = QueryArgs.getString("url"); }
       if(!urlList) { urlList = prompt("Enter comma-separated Deviantart URLs for 3D viewing"); }
@@ -111,6 +85,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       let skyboxes = [];
       let firstDone = false;
+      let fov = parseFloat(QueryArgs.getString("fov")) || 70;
       
       function nextoEmbed() {
           if(!urlList.length) { return; }
@@ -167,13 +142,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           });
 
           navigator.xr.requestSession('inline').then(function(session) {
-              let value = parseFloat(fov.value);
-              let radValue = value * (Math.PI / 180);
-
               session.updateRenderState({
-                  inlineVerticalFieldOfView: radValue
+                  inlineVerticalFieldOfView: fov * (Math.PI / 180);
               });
-            
               return session;
           }).then(onSessionStarted);
         }
