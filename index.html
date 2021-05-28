@@ -172,6 +172,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
 
       function onSessionStarted(session) {
+        window.sessionDebug = session;
+        
         session.addEventListener('end', onSessionEnded);
 
         initGL();
