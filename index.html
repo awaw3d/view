@@ -34,13 +34,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   </head>
   <body>
     <header>
-      <details open>
-        <summary>360 Viewer</summary>
-        <ul>
-          <li><code>?urls=</code> - list of DeviantArt/image URLs</li>
-          <li><code>&stereo=top</code> or <code>side</code> - if using stereo images</li>
-          <li><code>&dims=WWWxHHH</code> - width x height (optional, for quality)</li>
-        </ul>
+      <details>
+        <summary>Options</summary>
+          <form id="controls">
+            <p><input type="text" name="urls" placeholder="URLs" id="input-urls"></p>
+            <p><input type="radio" name="stereo" value="none" id="input-no-stereo"> <label for="input-no-stereo">No Stereo</label>
+            <input type="radio" name="stereo" value="side" id="input-side-stereo"> <label for="input-side-stereo">Side</label>
+            <input type="radio" name="stereo" value="top" id="input-top-stereo"> <label for="input-top-stereo">Top</label></p>
+            <p>Dimensions (optional)<br>
+            <input type="text" id="input-dims" placeholder="WWWWxHHHH"></p>
+            <p>FOV: <input type="number" value="70" id="input-fov"></p>
+            <p><input type="submit" value="Update"></p>
+          </form>
       </details>
     </header>
     <script type="module">
@@ -52,6 +57,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       import {InlineViewerHelper} from './js/util/inline-viewer-helper.js';
       import {QueryArgs} from './js/util/query-args.js';
 
+      document.getElementById("input-urls").value = QueryArgs.getString("urls");
+      document.getElementById("input-dims").value = QueryArgs.getString("dims");
+      document.getElementById("input-fov").value = QueryArgs.getString("fov");
+      (document.getElementById("input-"+QueryArgs.getString("stereo")+"-stereo") ||
+       document.getElementById("input-no-stereo")).checked = true;
+      
       // If requested, use the polyfill to provide support for mobile devices
       // and devices which only support WebVR.
       import WebXRPolyfill from './js/third-party/webxr-polyfill/build/webxr-polyfill.module.js';
@@ -90,6 +101,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       function nextoEmbed() {
           if(!urlList.length) { return; }
           var nextURL = urlList.shift();
+          // if this URL is a DeviantArt URL, use the oEmbed servie to get the image URL
           if(nextURL.match(/^https?:\/\/sta\.sh\/|^https?:\/\/(www\.)?deviantart\.com\/|^https?:\/\/fav\.me\//)) {
               let s = document.createElement("script");
               s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(nextURL)}&format=jsonp&callback=onDeviantFetch`
@@ -109,7 +121,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       window.onDeviantFetch = function(response, isDirectCall) {
           // if this is an oembed result, turn `q_XX` (quality) parameter up to 100
-          // and if `dims` are provided, scale to those dimensions
+          // and if `dims` are provided, scale `w_XXXX` and `h_XXXX` to those dimensions
           if(!isDirectCall) {
             response.url = response.url.replace(/,q_\d+/, ",q_100");
             if(dims) {
