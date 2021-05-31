@@ -35,13 +35,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
   <body>
     <header>
       <details>
-        <summary>Options</summary>
+        <summary>Settings</summary>
           <form id="controls">
             <p>URLs:<br><input type="text" name="urls" placeholder="URLs" id="input-urls"></p>
             <p><input type="radio" name="stereo" value="none" id="input-no-stereo"> <label for="input-no-stereo">No Stereo</label>
             <input type="radio" name="stereo" value="side" id="input-side-stereo"> <label for="input-side-stereo">Side</label>
             <input type="radio" name="stereo" value="top" id="input-top-stereo"> <label for="input-top-stereo">Top</label></p>
-            <p>Dimensions (optional)<br>
+            <p>Dimensions (optional, for quality)<br>
             <input type="text" id="input-dims" name="dims" placeholder="WWWWxHHHH"></p>
             <p>FOV: <input type="number" name="fov" value="70" id="input-fov" placeholder="70"></p>
             <p><input type="submit" value="Update"></p>
@@ -56,12 +56,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       import {SkyboxNode} from './js/render/nodes/skybox.js';
       import {InlineViewerHelper} from './js/util/inline-viewer-helper.js';
       import {QueryArgs} from './js/util/query-args.js';
-
+      
+      // fill in inputs based on load-time URL params
       document.getElementById("input-urls").value = QueryArgs.getString("urls", "");
       document.getElementById("input-dims").value = QueryArgs.getString("dims", "");
       document.getElementById("input-fov").value = QueryArgs.getString("fov", "");
       (document.getElementById("input-"+QueryArgs.getString("stereo")+"-stereo") ||
        document.getElementById("input-no-stereo")).checked = true;
+      
+      // remove unusued inputs on submit to avoid blank values in URL
+      document.getElementById("controls").addEventListener("submit", function() {
+        if(!document.getElementById("input-dims").value) { document.getElementById("input-dims").disabled = "disabled"; }
+        if(!document.getElementById("input-fov").value) { document.getElementById("input-fov").disabled = "disabled"; }
+        if(document.getElementById("input-no-stereo").checked) { document.getElementById("input-no-stereo").disabled = "disabled"; }
+      });
       
       // If requested, use the polyfill to provide support for mobile devices
       // and devices which only support WebVR.
