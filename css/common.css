@@ -81,15 +81,12 @@ canvas {
 }
 
 #input-urls {
-  width: 100%
+  width: 100%;
 }
 
-#input-width, #input-height {
-  width: 50px
-}
-
-#input-width {
-  margin-left: 10px
+#input-dims {
+  width: 120px;
+  margin-left: 10px;
 }
 
 #input-fov {
