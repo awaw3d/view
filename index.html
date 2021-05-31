@@ -84,7 +84,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       let urlList = QueryArgs.getString("urls");
       if(!urlList) { urlList = QueryArgs.getString("url"); }
-      if(!urlList) { urlList = prompt("Enter comma-separated Deviantart URLs for 3D viewing"); }
       urlList = urlList.split(",");
       
       // expects dims=WWWWxHHHH
