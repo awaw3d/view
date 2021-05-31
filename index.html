@@ -57,9 +57,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       import {InlineViewerHelper} from './js/util/inline-viewer-helper.js';
       import {QueryArgs} from './js/util/query-args.js';
 
-      document.getElementById("input-urls").value = QueryArgs.getString("urls");
-      document.getElementById("input-dims").value = QueryArgs.getString("dims");
-      document.getElementById("input-fov").value = QueryArgs.getString("fov");
+      document.getElementById("input-urls").value = QueryArgs.getString("urls", "");
+      document.getElementById("input-dims").value = QueryArgs.getString("dims", "");
+      document.getElementById("input-fov").value = QueryArgs.getString("fov", "");
       (document.getElementById("input-"+QueryArgs.getString("stereo")+"-stereo") ||
        document.getElementById("input-no-stereo")).checked = true;
       
