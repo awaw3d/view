@@ -24,7 +24,7 @@ details summary {
   cursor: pointer;
 }
 
-details summary p {
+details p {
   margin: 5px;
 }
 
