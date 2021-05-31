@@ -19,8 +19,13 @@ header {
 }
 
 details summary {
-  font-size: 1.0em;
+  font-size: 1.4em;
   font-weight: bold;
+  cursor: pointer;
+}
+
+details summary p {
+  margin: 5px;
 }
 
 /*details[open] summary {
