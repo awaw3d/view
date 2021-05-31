@@ -1,4 +1,4 @@
-Copyright 2018 The Immersive Web Community Group
+Copyright 2018 The Immersive Web Community Group  
 Copyright 2020, 2021 awaw
 
 Permission is hereby granted, free of charge, to any person obtaining a copy of
