@@ -37,13 +37,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       <details>
         <summary>Settings</summary>
           <form id="controls">
-            <p>URLs (optionally, comma-separated list for slideshow):<br><input type="text" name="urls" placeholder="URLs" id="input-urls"></p>
+            <p>URL (or comma-separated list, for slideshow):<br><input type="text" name="urls" placeholder="URLs" id="input-urls"></p>
             <p><input type="radio" name="stereo" value="none" id="input-no-stereo"> <label for="input-no-stereo">No Stereo</label>
             <input type="radio" name="stereo" value="side" id="input-side-stereo"> <label for="input-side-stereo">Side</label>
             <input type="radio" name="stereo" value="top" id="input-top-stereo"> <label for="input-top-stereo">Top</label></p>
             <p>Dimensions (optional, for quality)<br>
             <input type="text" id="input-dims" name="dims" placeholder="WWWWxHHHH"></p>
-            <p>FOV: <input type="number" name="fov" value="70" id="input-fov" placeholder="70"></p>
+            <p>FOV: <input type="number" name="fov" id="input-fov" placeholder="70"></p>
+            <p>Time: <input type="number" name="time" id="input-time" placeholder="10"> (slideshow only)</p>
             <p><input type="submit" value="Update"></p>
           </form>
       </details>
@@ -61,6 +62,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       document.getElementById("input-urls").value = QueryArgs.getString("urls", "");
       document.getElementById("input-dims").value = QueryArgs.getString("dims", "");
       document.getElementById("input-fov").value = QueryArgs.getString("fov", "");
+      document.getElementById("input-time").value = QueryArgs.getString("time", "");
       (document.getElementById("input-"+QueryArgs.getString("stereo")+"-stereo") ||
        document.getElementById("input-no-stereo")).checked = true;
       
@@ -68,6 +70,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       document.getElementById("controls").addEventListener("submit", function() {
         if(!document.getElementById("input-dims").value) { document.getElementById("input-dims").disabled = "disabled"; }
         if(!document.getElementById("input-fov").value) { document.getElementById("input-fov").disabled = "disabled"; }
+        if(!document.getElementById("input-time").value) { document.getElementById("input-time").disabled = "disabled"; }
         if(document.getElementById("input-no-stereo").checked) { document.getElementById("input-no-stereo").disabled = "disabled"; }
       });
       
