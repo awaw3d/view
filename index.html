@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <input type="radio" name="stereo" value="top" id="input-top-stereo"> <label for="input-top-stereo">Top</label></p>
             <p>Dimensions (optional, for quality)<br>
             <input type="text" id="input-dims" name="dims" placeholder="WWWWxHHHH"></p>
-            <p>FOV: <input id='input-fov' min='20' max='150' step='5' placeholder="70" type='number'/>
+            <p>FOV: <input id='input-fov' min='20' max='150' step='5' value="70" type='number'/>
             <p>Time: <input type="number" name="time" id="input-time" placeholder="10"> (slideshow only)</p>
             <p><input type="submit" value="Update"></p>
           </form>
@@ -98,7 +98,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       // remove unusued inputs on submit to avoid blank values in URL
       document.getElementById("controls").addEventListener("submit", function() {
         if(!document.getElementById("input-dims").value) { document.getElementById("input-dims").disabled = "disabled"; }
-        if(!document.getElementById("input-fov").value) { document.getElementById("input-fov").disabled = "disabled"; }
+        if(!document.getElementById("input-fov").value || document.getElementById("input-fov").value == 70) { document.getElementById("input-fov").disabled = "disabled"; }
         if(!document.getElementById("input-time").value) { document.getElementById("input-time").disabled = "disabled"; }
         if(document.getElementById("input-no-stereo").checked) { document.getElementById("input-no-stereo").disabled = "disabled"; }
       });
