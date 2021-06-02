@@ -87,7 +87,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       // fill in inputs based on load-time URL params
       document.getElementById("input-urls").value = QueryArgs.getString("urls", "");
       document.getElementById("input-dims").value = QueryArgs.getString("dims", "");
-      document.getElementById("input-fov").value = QueryArgs.getString("fov", "70");
+      document.getElementById("input-fov").value = QueryArgs.getString("fov", "");
       document.getElementById("input-time").value = QueryArgs.getString("time", "");
       (document.getElementById("input-"+QueryArgs.getString("stereo")+"-stereo") ||
        document.getElementById("input-no-stereo")).checked = true;
@@ -98,7 +98,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       // remove unusued inputs on submit to avoid blank values in URL
       document.getElementById("controls").addEventListener("submit", function() {
         if(!document.getElementById("input-dims").value) { document.getElementById("input-dims").disabled = "disabled"; }
-        if(!document.getElementById("input-fov").value || document.getElementById("input-fov").value == 70) { document.getElementById("input-fov").disabled = "disabled"; }
+        //if(!document.getElementById("input-fov").value || document.getElementById("input-fov").value == 70) { document.getElementById("input-fov").disabled = "disabled"; }
         if(!document.getElementById("input-time").value) { document.getElementById("input-time").disabled = "disabled"; }
         if(document.getElementById("input-no-stereo").checked) { document.getElementById("input-no-stereo").disabled = "disabled"; }
       });
