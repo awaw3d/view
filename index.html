@@ -80,7 +80,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         if(e.deltaY > 0) { fov++; }
         else if(e.deltaY < 0) { fov--; }
         
-        document.getElementById("input-fov").value = fov;
+        document.getElementById("input-fov").value = Math.max(Math.min(fov, 150), 20);
         updateFov();
       })
       
