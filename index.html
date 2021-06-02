@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <input type="radio" name="stereo" value="top" id="input-top-stereo"> <label for="input-top-stereo">Top</label></p>
             <p>Dimensions (optional, for quality)<br>
             <input type="text" id="input-dims" name="dims" placeholder="WWWWxHHHH"></p>
-            <p>FOV: <input id='input-fov' value='70' min='20' max='150' step='1' type='text'/>
+            <p>FOV: <input id='input-fov' min='20' max='150' step='5' placeholder="70" type='number'/>
             <p>Time: <input type="number" name="time" id="input-time" placeholder="10"> (slideshow only)</p>
             <p><input type="submit" value="Update"></p>
           </form>
@@ -60,7 +60,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       // put FOV input into effect in the view
       function updateFov() {
-        let value = parseFloat(document.getElementById("input-fov").value);
+        let value = parseFloat(document.getElementById("input-fov").value) || 70;
         // The inlineVerticalFieldOfView is specified in radians.
         let radValue = value * (Math.PI / 180);
 
@@ -75,7 +75,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       // zoom FOV with mouse wheel
       window.addEventListener("wheel", function(e) {
-        var fov = parseFloat(document.getElementById("input-fov").value);
+        var fov = parseFloat(document.getElementById("input-fov").value) || 70;
         
         if(e.deltaY > 0) { fov++; }
         else if(e.deltaY < 0) { fov--; }
@@ -135,7 +135,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       let skyboxes = [];
       let firstDone = false;
-      let fov = parseFloat(QueryArgs.getString("fov")) || 70;
       
       function nextoEmbed() {
           if(!urlList.length) { return; }
@@ -194,7 +193,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
           navigator.xr.requestSession('inline').then(function(session) {
               session.updateRenderState({
-                  inlineVerticalFieldOfView: fov * (Math.PI / 180)
+                  inlineVerticalFieldOfView: (document.getElementById("input-fov").value || 70) * (Math.PI / 180)
               });
               return session;
           }).then(onSessionStarted);
