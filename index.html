@@ -59,7 +59,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       import {QueryArgs} from './js/util/query-args.js';
       
       function updateFov() {
-        let value = parseFloat(fov.value);
+        let value = parseFloat(document.getElementById("input-fov").value);
         // The inlineVerticalFieldOfView is specified in radians.
         let radValue = value * (Math.PI / 180);
 
