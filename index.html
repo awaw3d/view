@@ -43,7 +43,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <input type="radio" name="stereo" value="top" id="input-top-stereo"> <label for="input-top-stereo">Top</label></p>
             <p>Dimensions (optional, for quality)<br>
             <input type="text" id="input-dims" name="dims" placeholder="WWWWxHHHH"></p>
-            <p>FOV: <input type="number" name="fov" id="input-fov" placeholder="70"></p>
+            <p>FOV: <input id='input-fov' value='70' min='20' max='150' step='1' type='range'/> <label id='vertFOVLabel' for="input-fov">70</label>
             <p>Time: <input type="number" name="time" id="input-time" placeholder="10"> (slideshow only)</p>
             <p><input type="submit" value="Update"></p>
           </form>
@@ -58,6 +58,23 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       import {InlineViewerHelper} from './js/util/inline-viewer-helper.js';
       import {QueryArgs} from './js/util/query-args.js';
       
+      function updateFov() {
+        let value = parseFloat(fov.value);
+        // The inlineVerticalFieldOfView is specified in radians.
+        let radValue = value * (Math.PI / 180);
+
+        if (window.globalSession) {
+          // As with any values set with updateRenderState, this will take
+          // effect on the next frame.
+          window.globalSession.updateRenderState({
+            inlineVerticalFieldOfView: radValue
+          });
+        }
+        
+        // Set the label on the page
+        document.getElementById("vertFOVLabel").textContent = `${value} degrees`;
+      }
+      
       // fill in inputs based on load-time URL params
       document.getElementById("input-urls").value = QueryArgs.getString("urls", "");
       document.getElementById("input-dims").value = QueryArgs.getString("dims", "");
@@ -65,6 +82,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       document.getElementById("input-time").value = QueryArgs.getString("time", "");
       (document.getElementById("input-"+QueryArgs.getString("stereo")+"-stereo") ||
        document.getElementById("input-no-stereo")).checked = true;
+      
+      document.getElementById("input-fov").addEventListener('change', updateFov);
+      updateFov();
       
       // remove unusued inputs on submit to avoid blank values in URL
       document.getElementById("controls").addEventListener("submit", function() {
