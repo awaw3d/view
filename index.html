@@ -2,17 +2,14 @@
 <!--
 Copyright 2018 The Immersive Web Community Group
 Copyright 2020, 2021 awaw
-
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
 use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
 the Software, and to permit persons to whom the Software is furnished to do so,
 subject to the following conditions:
-
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
-
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
 FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
@@ -57,19 +54,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       import {SkyboxNode} from './js/render/nodes/skybox.js';
       import {InlineViewerHelper} from './js/util/inline-viewer-helper.js';
       import {QueryArgs} from './js/util/query-args.js';
-      import {UrlTexture} from './js/render/core/texture.js';
-      import {ButtonNode} from './js/render/nodes/button.js';
-      import {mat4} from './js/render/math/gl-matrix.js';
       
-      window.ButtonNode = ButtonNode;
-      window.mat4 = mat4;
-      window.UrlTexture = UrlTexture; 
-      
-      if(QueryArgs.getBool('debug', true)) {
-        new ButtonNode(new UrlTexture("./media/textures/x-button.png"), () => { alert("press"); });
-        
-      }
-        
       // put FOV input into effect in the view
       function updateFov() {
         let value = parseFloat(document.getElementById("input-fov").value) || 70;
@@ -134,8 +119,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let scene = new Scene();
       scene.enableStats(false);
       
-      window.scene = scene;
-      
       let urlList = QueryArgs.getString("urls");
       if(!urlList) { urlList = QueryArgs.getString("url"); }
       urlList = urlList.split(",");
@@ -164,9 +147,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       };
       
       function embedsDone() {
-          scene.removeNode(skyboxes[skyboxes.length-1]);  
           let nextBox = skyboxes.shift();
           skyboxes.push(nextBox);
+          scene.clearNodes();
           scene.addNode(nextBox);
           setTimeout(embedsDone, QueryArgs.getInt("time", 10) * 1000);
       }
