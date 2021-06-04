@@ -65,6 +65,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       window.mat4 = mat4;
       window.UrlTexture = UrlTexture; 
       
+      if(QueryArgs.getBool('debug', true)) {
+        new ButtonNode(new UrlTexture("./media/textures/x-button.png"), () => { alert("press"); });
+        
+      }
+        
       // put FOV input into effect in the view
       function updateFov() {
         let value = parseFloat(document.getElementById("input-fov").value) || 70;
@@ -128,6 +133,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let renderer = null;
       let scene = new Scene();
       scene.enableStats(false);
+      
+      window.scene = scene;
       
       let urlList = QueryArgs.getString("urls");
       if(!urlList) { urlList = QueryArgs.getString("url"); }
