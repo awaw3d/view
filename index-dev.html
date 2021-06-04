@@ -1,0 +1,324 @@
+<!doctype html>
+<!--
+Copyright 2018 The Immersive Web Community Group
+Copyright 2020, 2021 awaw
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of
+this software and associated documentation files (the "Software"), to deal in
+the Software without restriction, including without limitation the rights to
+use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of
+the Software, and to permit persons to whom the Software is furnished to do so,
+subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS
+FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
+IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
+CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+-->
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1, user-scalable=no'>
+    <meta name='mobile-web-app-capable' content='yes'>
+    <meta name='apple-mobile-web-app-capable' content='yes'>
+    <link rel='icon' type='image/png' sizes='32x32' href='favicon-32x32.png'>
+    <link rel='icon' type='image/png' sizes='96x96' href='favicon-96x96.png'>
+    <link rel='stylesheet' href='css/common.css'>
+
+    <title>360 Viewer</title>
+  </head>
+  <body>
+    <header>
+      <details>
+        <summary>Settings</summary>
+          <form id="controls">
+            <p>URL (or comma-separated list, for slideshow):<br><input type="text" name="urls" placeholder="URLs" id="input-urls"></p>
+            <p><input type="radio" name="stereo" value="none" id="input-no-stereo"> <label for="input-no-stereo">No Stereo</label>
+            <input type="radio" name="stereo" value="side" id="input-side-stereo"> <label for="input-side-stereo">Side</label>
+            <input type="radio" name="stereo" value="top" id="input-top-stereo"> <label for="input-top-stereo">Top</label></p>
+            <p>Dimensions (optional, for quality)<br>
+            <input type="text" id="input-dims" name="dims" placeholder="WWWWxHHHH"></p>
+            <p>FOV: <input id='input-fov' min='20' max='150' step='1' value="70" name="fov" type='number'/>
+            <p>Time: <input type="number" name="time" id="input-time" placeholder="10"> (slideshow only)</p>
+            <p><input type="submit" value="Update"></p>
+          </form>
+      </details>
+    </header>
+    <script type="module">
+      import {WebXRSampleApp} from '../js/webxr-sample-app.js';
+      import {WebXRButton} from './js/util/webxr-button.js';
+      import {Scene, WebXRView} from './js/render/scenes/scene.js';
+      import {Renderer, createWebGLContext} from './js/render/core/renderer.js';
+      import {Gltf2Node} from './js/render/nodes/gltf2.js';
+      import {SkyboxNode} from './js/render/nodes/skybox.js';
+      import {InlineViewerHelper} from './js/util/inline-viewer-helper.js';
+      import {QueryArgs} from './js/util/query-args.js';
+      import {UrlTexture} from './js/render/core/texture.js';
+      import {ButtonNode} from './js/render/nodes/button.js';
+      import {mat4} from './js/render/math/gl-matrix.js';
+      
+      window.ButtonNode = ButtonNode;
+      window.mat4 = mat4;
+      window.UrlTexture = UrlTexture; 
+      
+      if(QueryArgs.getBool('debug', true)) {
+        new ButtonNode(new UrlTexture("./media/textures/x-button.png"), () => { alert("press"); });
+        
+      }
+        
+      // put FOV input into effect in the view
+      function updateFov() {
+        let value = parseFloat(document.getElementById("input-fov").value) || 70;
+        // The inlineVerticalFieldOfView is specified in radians.
+        let radValue = value * (Math.PI / 180);
+
+        if (window.globalSession) {
+          // As with any values set with updateRenderState, this will take
+          // effect on the next frame.
+          window.globalSession.updateRenderState({
+            inlineVerticalFieldOfView: radValue
+          });
+        }
+      }
+      
+      // zoom FOV with mouse wheel
+      window.addEventListener("wheel", function(e) {
+        var fov = parseFloat(document.getElementById("input-fov").value) || 70;
+        
+        if(e.deltaY > 0) { fov++; }
+        else if(e.deltaY < 0) { fov--; }
+        
+        document.getElementById("input-fov").value = Math.max(Math.min(fov, 150), 20);
+        updateFov();
+      })
+      
+      // fill in inputs based on load-time URL params
+      document.getElementById("input-urls").value = QueryArgs.getString("urls", "");
+      document.getElementById("input-dims").value = QueryArgs.getString("dims", "");
+      document.getElementById("input-fov").value = QueryArgs.getString("fov", "70");
+      document.getElementById("input-time").value = QueryArgs.getString("time", "");
+      (document.getElementById("input-"+QueryArgs.getString("stereo")+"-stereo") ||
+       document.getElementById("input-no-stereo")).checked = true;
+      
+      document.getElementById("input-fov").addEventListener('change', updateFov);
+      updateFov();
+      
+      // remove unusued inputs on submit to avoid blank values in URL
+      document.getElementById("controls").addEventListener("submit", function() {
+        if(!document.getElementById("input-dims").value) { document.getElementById("input-dims").disabled = "disabled"; }
+        if(!document.getElementById("input-fov").value || document.getElementById("input-fov").value == 70) { document.getElementById("input-fov").disabled = "disabled"; }
+        if(!document.getElementById("input-time").value) { document.getElementById("input-time").disabled = "disabled"; }
+        if(document.getElementById("input-no-stereo").checked) { document.getElementById("input-no-stereo").disabled = "disabled"; }
+      });
+      
+      // If requested, use the polyfill to provide support for mobile devices
+      // and devices which only support WebVR.
+      import WebXRPolyfill from './js/third-party/webxr-polyfill/build/webxr-polyfill.module.js';
+      if (QueryArgs.getBool('usePolyfill', true)) {
+        let polyfill = new WebXRPolyfill();
+      }
+
+      // XR globals.
+      let xrButton = null;
+      let xrImmersiveRefSpace = null;
+      let inlineViewerHelper = null;
+      let globalSession = null;
+
+      // WebGL scene globals.
+      let gl = null;
+      let renderer = null;
+      let scene = new Scene();
+      scene.enableStats(false);
+      
+      window.scene = scene;
+      
+      let urlList = QueryArgs.getString("urls");
+      if(!urlList) { urlList = QueryArgs.getString("url"); }
+      urlList = urlList.split(",");
+      
+      // expects dims=WWWWxHHHH
+      let dims = QueryArgs.getString("dims");
+      if(dims) {
+          dims = dims.split("x");
+          if(dims.length != 2) { dims = undefined; }
+      }
+      
+      let skyboxes = [];
+      let firstDone = false;
+      
+      function nextoEmbed() {
+          if(!urlList.length) { return; }
+          var nextURL = urlList.shift();
+          // if this URL is a DeviantArt URL, use the oEmbed servie to get the image URL
+          if(nextURL.match(/^https?:\/\/sta\.sh\/|^https?:\/\/(www\.)?deviantart\.com\/|^https?:\/\/fav\.me\//)) {
+              let s = document.createElement("script");
+              s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(nextURL)}&format=jsonp&callback=onDeviantFetch`
+              document.body.appendChild(s);
+          } else {
+              window.onDeviantFetch({ url: nextURL }, true);
+          }
+      };
+      
+      function embedsDone() {
+          scene.removeNode(skyboxes[skyboxes.length-1]);  
+          let nextBox = skyboxes.shift();
+          skyboxes.push(nextBox);
+          scene.addNode(nextBox);
+          setTimeout(embedsDone, QueryArgs.getInt("time", 10) * 1000);
+      }
+      
+      window.onDeviantFetch = function(response, isDirectCall) {
+          // if this is an oembed result, turn `q_XX` (quality) parameter up to 100
+          // and if `dims` are provided, scale `w_XXXX` and `h_XXXX` to those dimensions
+          if(!isDirectCall) {
+            response.url = response.url.replace(/,q_\d+/, ",q_100");
+            if(dims) {
+               response.url = response.url.replace(/fill\/w_\d+,h_\d+/, "fill/w_"+dims[0]+",h_"+dims[1]);
+            }
+          }
+          
+          let stereo = QueryArgs.getString("stereo");
+          skyboxes.push(new SkyboxNode({
+            url: response.url,
+            displayMode: stereo=="top"?'stereoTopBottom':stereo=="side"?'stereoLeftRight':'mono',
+            rotationY: Math.PI
+          }));
+          if(!firstDone) { embedsDone(); firstDone = true; }
+          nextoEmbed();
+      }
+      
+      nextoEmbed();
+      
+      function initXR() {
+        xrButton = new WebXRButton({
+          onRequestSession: onRequestSession,
+          onEndSession: onEndSession
+        });
+        document.querySelector('header').appendChild(xrButton.domElement);
+
+        if (navigator.xr) {
+          navigator.xr.isSessionSupported('immersive-vr').then((supported) => {
+            xrButton.enabled = supported;
+          });
+
+          navigator.xr.requestSession('inline').then(function(session) {
+              session.updateRenderState({
+                  inlineVerticalFieldOfView: (document.getElementById("input-fov").value || 70) * (Math.PI / 180)
+              });
+              return session;
+          }).then(onSessionStarted);
+        }
+      }
+
+      function initGL() {
+        if (gl)
+          return;
+
+        gl = createWebGLContext({
+          xrCompatible: true
+        });
+        document.body.appendChild(gl.canvas);
+
+        function onResize() {
+          gl.canvas.width = gl.canvas.clientWidth * window.devicePixelRatio;
+          gl.canvas.height = gl.canvas.clientHeight * window.devicePixelRatio;
+        }
+        window.addEventListener('resize', onResize);
+        onResize();
+
+        renderer = new Renderer(gl);
+        scene.setRenderer(renderer);
+      }
+
+      function onRequestSession() {
+        return navigator.xr.requestSession('immersive-vr').then((session) => {
+          xrButton.setSession(session);
+          session.isImmersive = true;
+          onSessionStarted(session);
+        });
+      }
+
+      function onSessionStarted(session) {
+        window.globalSession = session;
+        
+        session.addEventListener('end', onSessionEnded);
+
+        initGL();
+        scene.inputRenderer.useProfileControllerMeshes(session);
+
+        let glLayer = new XRWebGLLayer(session, gl);
+        session.updateRenderState({ baseLayer: glLayer });
+
+        // When rendering 360 photos/videos you want to ensure that the user's
+        // head is always at the center of the rendered media. Otherwise users
+        // with 6DoF hardware could walk towards the edges and see a very skewed
+        // or outright broken view of the image. To prevent that, we request a
+        // 'position-disabled' reference space, which suppresses any positional
+        // information from the headset. (As an added bonus this mode may be
+        // more power efficient on some hardware!)
+        let refSpaceType = session.isImmersive ? 'local' : 'viewer';
+        session.requestReferenceSpace(refSpaceType).then((refSpace) => {
+          if (session.isImmersive) {
+            xrImmersiveRefSpace = refSpace;
+          } else {
+            inlineViewerHelper = new InlineViewerHelper(gl.canvas, refSpace);
+          }
+          session.requestAnimationFrame(onXRFrame);
+        });
+      }
+
+      function onEndSession(session) {
+        session.end();
+      }
+
+      function onSessionEnded(event) {
+        if (event.session.isImmersive) {
+          xrButton.setSession(null);
+        }
+      }
+
+      function onXRFrame(t, frame) {
+        let session = frame.session;
+        let refSpace = session.isImmersive ?
+                         xrImmersiveRefSpace :
+                         inlineViewerHelper.referenceSpace;
+        let pose = frame.getViewerPose(refSpace);
+
+        scene.startFrame();
+
+        session.requestAnimationFrame(onXRFrame);
+
+        let glLayer = session.renderState.baseLayer;
+        gl.bindFramebuffer(gl.FRAMEBUFFER, glLayer.framebuffer);
+        gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+
+        if (pose) {
+          let views = [];
+          for (let view of pose.views) {
+            let renderView = new WebXRView(view, glLayer);
+
+            // It's important to take into account which eye the view is
+            // associated with in cases like this, since it informs which half
+            // of the stereo image should be used when rendering the view.
+            renderView.eye = view.eye
+            views.push(renderView);
+          }
+
+          scene.updateInputSources(frame, refSpace);
+
+          scene.drawViewArray(views);
+        }
+
+        scene.endFrame();
+      }
+
+      // Start the XR application.
+      initXR();
+    </script>
+  </body>
+</html>
