@@ -143,8 +143,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       function embedsDone() {
           let nextBox = skyboxes.shift();
           skyboxes.push(nextBox);
-          scene.clearNodes();
-          scene.addNode(nextBox);
+          app.scene.clearNodes();
+          app.scene.addNode(nextBox);
           setTimeout(embedsDone, QueryArgs.getInt("time", 10) * 1000);
       }
       
