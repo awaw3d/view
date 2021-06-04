@@ -68,6 +68,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       app.scene.enableStats(false);
       document.querySelector('header').appendChild(app.xrButton.domElement);
       window.app = app;
+      var oldOnSessionstarted = app.onSessionStarted;
+      app.onSessionStarted = function(session) {
+          window.globalSession = session;
+          oldOnSessionStarted.apply(this, [...arguments]);
+      }
 
       // put FOV input into effect in the view
       function updateFov() {
@@ -103,8 +108,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       (document.getElementById("input-"+QueryArgs.getString("stereo")+"-stereo") ||
        document.getElementById("input-no-stereo")).checked = true;
       
-      //document.getElementById("input-fov").addEventListener('change', updateFov);
-      //updateFov();
+      document.getElementById("input-fov").addEventListener('change', updateFov);
+      updateFov();
       
       // remove unusued inputs on submit to avoid blank values in URL
       document.getElementById("controls").addEventListener("submit", function() {
