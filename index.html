@@ -72,6 +72,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       var oldOnSessionStarted = app.onSessionStarted;
       app.onSessionStarted = function(session) {
           window.globalSession = session;
+	  updateFov();
           oldOnSessionStarted.apply(this, [...arguments]);
       }
 
