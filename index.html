@@ -164,9 +164,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       };
       
       function embedsDone() {
+          scene.removeNode(skyboxes[skyboxes.length-1]);  
           let nextBox = skyboxes.shift();
           skyboxes.push(nextBox);
-          scene.clearNodes();
           scene.addNode(nextBox);
           setTimeout(embedsDone, QueryArgs.getInt("time", 10) * 1000);
       }
