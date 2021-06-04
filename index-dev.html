@@ -113,6 +113,63 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         if(document.getElementById("input-no-stereo").checked) { document.getElementById("input-no-stereo").disabled = "disabled"; }
       });
 
+      let urlList = QueryArgs.getString("urls");
+      if(!urlList) { urlList = QueryArgs.getString("url"); }
+      urlList = urlList.split(",");
+      
+      // expects dims=WWWWxHHHH
+      let dims = QueryArgs.getString("dims");
+      if(dims) {
+          dims = dims.split("x");
+          if(dims.length != 2) { dims = undefined; }
+      }
+      
+      let skyboxes = [];
+      let firstDone = false;
+      
+      function nextoEmbed() {
+          if(!urlList.length) { return; }
+          var nextURL = urlList.shift();
+          // if this URL is a DeviantArt URL, use the oEmbed servie to get the image URL
+          if(nextURL.match(/^https?:\/\/sta\.sh\/|^https?:\/\/(www\.)?deviantart\.com\/|^https?:\/\/fav\.me\//)) {
+              let s = document.createElement("script");
+              s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(nextURL)}&format=jsonp&callback=onDeviantFetch`
+              document.body.appendChild(s);
+          } else {
+              window.onDeviantFetch({ url: nextURL }, true);
+          }
+      };
+      
+      function embedsDone() {
+          let nextBox = skyboxes.shift();
+          skyboxes.push(nextBox);
+          scene.clearNodes();
+          scene.addNode(nextBox);
+          setTimeout(embedsDone, QueryArgs.getInt("time", 10) * 1000);
+      }
+      
+      window.onDeviantFetch = function(response, isDirectCall) {
+          // if this is an oembed result, turn `q_XX` (quality) parameter up to 100
+          // and if `dims` are provided, scale `w_XXXX` and `h_XXXX` to those dimensions
+          if(!isDirectCall) {
+            response.url = response.url.replace(/,q_\d+/, ",q_100");
+            if(dims) {
+               response.url = response.url.replace(/fill\/w_\d+,h_\d+/, "fill/w_"+dims[0]+",h_"+dims[1]);
+            }
+          }
+          
+          let stereo = QueryArgs.getString("stereo");
+          skyboxes.push(new SkyboxNode({
+            url: response.url,
+            displayMode: stereo=="top"?'stereoTopBottom':stereo=="side"?'stereoLeftRight':'mono',
+            rotationY: Math.PI
+          }));
+          if(!firstDone) { embedsDone(); firstDone = true; }
+          nextoEmbed();
+      }
+      
+      nextoEmbed();
+	    
       /*
       let checkTexture = new UrlTexture('./media/textures/check-button.png');
       let xTexture = new UrlTexture('./media/textures/x-button.png');
