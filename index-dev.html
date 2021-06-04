@@ -1,6 +1,7 @@
 <!doctype html>
 <!--
 Copyright 2018 The Immersive Web Community Group
+Copyright 2020, 2021 awaw
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
@@ -26,7 +27,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
     <link rel='icon' type='image/png' sizes='96x96' href='./favicon-96x96.png'>
     <link rel='stylesheet' href='./css/common.css'>
 
-    <title>Dev 360 Viewer</title>
+    <title>360 Viewer</title>
   </head>
   <body>
 <header>
@@ -71,6 +72,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       var oldOnSessionStarted = app.onSessionStarted;
       app.onSessionStarted = function(session) {
           window.globalSession = session;
+	  updateFov();
           oldOnSessionStarted.apply(this, [...arguments]);
       }
 
