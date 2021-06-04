@@ -190,6 +190,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       mat4.rotateY(button.matrix, button.matrix, 0);
       mat4.translate(button.matrix, button.matrix, [0, 0, .5]);
       app.scene.addNode(button);
+      window.button = button;
 
       // Start the XR application.
       app.run();
