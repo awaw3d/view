@@ -150,9 +150,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       // after everything has loaded, loop this on a timer
       function embedsDone() {
+	  app.scene.removeNode(skyboxes[skyboxes.length-1]);
           let nextBox = skyboxes.shift();
           skyboxes.push(nextBox);
-          app.scene.clearNodes();
           app.scene.addNode(nextBox);
           setTimeout(embedsDone, QueryArgs.getInt("time", 10) * 1000);
       }
@@ -167,6 +167,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             }
           }
           
+	  new Image().src = response.url;
+	      
           let stereo = QueryArgs.getString("stereo");
           skyboxes.push(new SkyboxNode({
             url: response.url,
