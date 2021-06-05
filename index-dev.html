@@ -82,13 +82,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         // The inlineVerticalFieldOfView is specified in radians.
         let radValue = value * (Math.PI / 180);
 
-        if (window.globalSession) {
+        try {
           // As with any values set with updateRenderState, this will take
           // effect on the next frame.
           window.globalSession.updateRenderState({
             inlineVerticalFieldOfView: radValue
           });
-        }
+        } catch(e) {}
       }
       
       // zoom FOV with mouse wheel
@@ -188,7 +188,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       mat4.identity(button.matrix);
       mat4.translate(button.matrix, button.matrix, [0, 0, 0]);
       mat4.rotateY(button.matrix, button.matrix, 0);
-      mat4.translate(button.matrix, button.matrix, [0, 0, .5]);
+      mat4.translate(button.matrix, button.matrix, [0, 0, -.5]);
       app.scene.addNode(button);
       window.button = button;
 
