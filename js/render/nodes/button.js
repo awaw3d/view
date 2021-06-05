@@ -23,12 +23,13 @@ import {Node} from '../core/node.js';
 import {PrimitiveStream} from '../geometry/primitive-stream.js';
 
 const BUTTON_SIZE = 0.1;
-const BUTTON_CORNER_RADIUS = 0.025;
+//const BUTTON_CORNER_RADIUS = 0.025;
+const BUTTON_CORNER_RADIUS = 0.1;
 const BUTTON_CORNER_SEGMENTS = 8;
 const BUTTON_ICON_SIZE = 0.07;
 const BUTTON_LAYER_DISTANCE = 0.005;
 const BUTTON_COLOR = 0.75;
-const BUTTON_ALPHA = 0.85;
+const BUTTON_ALPHA = 0.75;
 const BUTTON_HOVER_COLOR = 0.9;
 const BUTTON_HOVER_ALPHA = 1.0;
 const BUTTON_HOVER_SCALE = 1.1;
