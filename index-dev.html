@@ -188,7 +188,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         console.log("click");
       });
       mat4.identity(button.matrix);
-      mat4.translate(button.matrix, button.matrix, [1, 0, 0]);
+      mat4.translate(button.matrix, button.matrix, [1, 1, 0]);
       mat4.rotateY(button.matrix, button.matrix, 0);
       mat4.translate(button.matrix, button.matrix, [0, 0, -1]);
       app.scene.addNode(button);
