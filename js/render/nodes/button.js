@@ -121,6 +121,9 @@ class ButtonIconMaterial extends Material {
 export class ButtonNode extends Node {
   constructor(iconTexture, callback) {
     super();
+    
+    // time to hover-stare at a button to auto-click it
+    this.STARETIMETOCLICK = 5000;
 
     // All buttons are selectable by default.
     this.selectable = true;
@@ -129,6 +132,7 @@ export class ButtonNode extends Node {
     this._iconTexture = iconTexture;
     this._hovered = false;
     this._hoverT = 0;
+    this._hoverTimeout = null;
   }
 
   get iconTexture() {
@@ -217,10 +221,12 @@ export class ButtonNode extends Node {
 
   onHoverStart() {
     this._hovered = true;
+    this._hoverTimeout = setTimeout(this._selectHandler, this.STARETIMETOCLICK)
   }
 
   onHoverEnd() {
     this._hovered = false;
+    clearTimeout(this._hoverTimeout);
   }
 
   _updateHoverState() {
