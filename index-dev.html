@@ -53,7 +53,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       import {Gltf2Node} from './js/render/nodes/gltf2.js';
       import {mat4} from './js/render/math/gl-matrix.js';
       import {QueryArgs} from './js/util/query-args.js';
-	  import {SkyboxNode} from './js/render/nodes/skybox.js';
+      import {SkyboxNode} from './js/render/nodes/skybox.js';
 
       // If requested, use the polyfill to provide support for mobile devices
       // and devices which only support WebVR.
@@ -186,6 +186,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let xTexture = new UrlTexture('./media/textures/x-button.png');
       let button = new ButtonNode(new UrlTexture(''), () => {
         console.log("click");
+	app.scene.addNode(new SkyboxNode({
+            url: "https://github.com/awaw3d/view/blob/master/media/textures/chess-pano-4k.jpg",
+            displayMode: "mono",
+            rotationY: Math.PI
+          }));
       });
       mat4.identity(button.matrix);
       //mat4.translate(button.matrix, button.matrix, [0, 0, 0]);
