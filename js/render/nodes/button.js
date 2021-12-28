@@ -123,7 +123,7 @@ export class ButtonNode extends Node {
     super();
     
     // time to hover-stare at a button to auto-click it
-    this.STARETIMETOCLICK = 5000;
+    this.STARETIMETOCLICK = 3500;
 
     // All buttons are selectable by default.
     this.selectable = true;
