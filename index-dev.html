@@ -196,7 +196,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       mat4.identity(button.matrix);
       //mat4.translate(button.matrix, button.matrix, [0, 0, 0]);
       //mat4.rotateY(button.matrix, button.matrix, 0);
-      mat4.translate(button.matrix, button.matrix, [0, 1, -1]);
+      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, -1]);
       app.scene.addNode(button);
       window.button = button;
 
