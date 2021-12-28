@@ -185,9 +185,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let checkTexture = new UrlTexture('./media/textures/check-button.png');
       let xTexture = new UrlTexture('./media/textures/x-button.png');
       let button = new ButtonNode(new UrlTexture(''), () => {
-        console.log("click");
+        console.log("clicked");
+	app.scene.removeNode(skyboxes[skyboxes.length-1]);
 	app.scene.addNode(new SkyboxNode({
-            url: "https://github.com/awaw3d/view/blob/master/media/textures/chess-pano-4k.jpg",
+            url: "https://raw.githubusercontent.com/awaw3d/view/master/media/textures/chess-pano-4k.jpg",
             displayMode: "mono",
             rotationY: Math.PI
           }));
