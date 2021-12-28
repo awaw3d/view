@@ -184,15 +184,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       let checkTexture = new UrlTexture('./media/textures/check-button.png');
       let xTexture = new UrlTexture('./media/textures/x-button.png');
-      let button = new ButtonNode(new UrlTexture(''), () => {
-        console.log("clicked");
-	app.scene.removeNode(skyboxes[skyboxes.length-1]);
-	app.scene.addNode(new SkyboxNode({
-            url: "https://raw.githubusercontent.com/awaw3d/view/master/media/textures/chess-pano-4k.jpg",
-            displayMode: "stereoTopBottom",
-            rotationY: Math.PI
-          }));
-      });
+	    
+      let callbackMaker = (url, buttonList, mode="mono") => {
+	      return () => {
+	          app.scene.clearNodes();
+	          app.scene.addNode(new SkyboxNode({
+                      url: url,
+                      displayMode: mode,
+                      rotationY: Math.PI
+                  }));
+	      }
+      }
+	    
+      let button = new ButtonNode(new UrlTexture(''), callbackMaker("https://raw.githubusercontent.com/awaw3d/view/master/media/textures/chess-pano-4k.jpg"));
+	    
       mat4.identity(button.matrix);
       //mat4.translate(button.matrix, button.matrix, [0, 0, 0]);
       //mat4.rotateY(button.matrix, button.matrix, 0);
