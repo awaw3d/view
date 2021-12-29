@@ -121,9 +121,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         if(document.getElementById("input-no-stereo").checked) { document.getElementById("input-no-stereo").disabled = "disabled"; }
       });
 
+      let scenes;
       let urlList = QueryArgs.getString("urls");
       if(!urlList) { urlList = QueryArgs.getString("url"); }
-      urlList = urlList.split(",");
+	    
+      // if neither `url` nor `urls` is set, check for `scenes` and load those URLs
+      if(!urlList) {
+          scenes = JSON.parse(document.getElementById("scenes").value);
+	  for(let [sname, scene] of Object.entries(scenes)) {
+	      urlList.push(scene.url);
+	  }
+      }
+      
+      if(typeof urlList == "string") {
+          urlList = urlList.split(",");
+      }
       
       // expects dims=WWWWxHHHH
       let dims = QueryArgs.getString("dims");
@@ -134,10 +146,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       let skyboxes = [];
       let firstDone = false;
-      
+      let nextURL;
+	    
       function nextoEmbed() {
           if(!urlList.length) { return; }
-          var nextURL = urlList.shift();
+          nextURL = urlList.shift();
           // if this URL is a DeviantArt URL, use the oEmbed servie to get the image URL
           if(nextURL.match(/^https?:\/\/sta\.sh\/|^https?:\/\/(www\.)?deviantart\.com\/|^https?:\/\/fav\.me\//)) {
               let s = document.createElement("script");
@@ -154,7 +167,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           let nextBox = skyboxes.shift();
           skyboxes.push(nextBox);
           app.scene.addNode(nextBox);
-          setTimeout(embedsDone, QueryArgs.getInt("time", 10) * 1000);
+	  // if time is default or non-negative, step through slideshow
+	  let time = QueryArgs.getInt("time");
+	  if(!time || time >= 0) {
+              setTimeout(embedsDone, QueryArgs.getInt("time", 10) * 1000);
+	  }
       }
       
       window.onDeviantFetch = function(response, isDirectCall) {
@@ -170,12 +187,21 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	  new Image().src = response.url;
 	      
           let stereo = QueryArgs.getString("stereo");
-          skyboxes.push(new SkyboxNode({
+          let skybox = new SkyboxNode({
             url: response.url,
             displayMode: stereo=="top"?'stereoTopBottom':stereo=="side"?'stereoLeftRight':'mono',
             rotationY: Math.PI
-          }));
-          if(!firstDone) { embedsDone(); firstDone = true; }
+          });
+	  skyboxes.push(skybox);
+	      
+	  if(scenes) {
+              let scene = scenes.find(s=>s.url === nextURL);
+	      scene.skybox = skybox;
+	      if(scenes["FIRST"] === scene) {
+	          showScene("FIRST");
+	      }
+	  }
+          if(!scenes && !firstDone) { embedsDone(); firstDone = true; }
           nextoEmbed();
       }
       
@@ -185,17 +211,35 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let checkTexture = new UrlTexture('./media/textures/check-button.png');
       let xTexture = new UrlTexture('./media/textures/x-button.png');
 	    
-      let callbackMaker = (url, buttonList, mode="mono") => {
+      let callbackMaker = (targetScene, buttonList, mode="mono") => {
 	      return () => {
-	          app.scene.clearNodes();
-	          app.scene.addNode(new SkyboxNode({
-                      url: url,
-                      displayMode: mode,
-                      rotationY: Math.PI
-                  }));
+	          
 	      }
       }
 	    
+      function showScene(sname) {
+          let scene = scenes[name];
+	  app.scene.clearNodes();
+	  let stereo = QueryArgs.getString("stereo");
+	  app.scene.addNode(new SkyboxNode({
+              url: url,
+              displayMode: stereo=="top"?'stereoTopBottom':stereo=="side"?'stereoLeftRight':'mono',
+              rotationY: Math.PI
+          }));
+	  for(button of scene.buttons) {
+	        
+	  }
+      }
+      
+      
+	      
+	      /*mat4.identity(button.matrix);
+mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
+mat4.rotateY(button.matrix, button.matrix, Math.PI/2);
+mat4.rotateX(button.matrix, button.matrix, -Math.PI/6);
+mat4.translate(button.matrix, button.matrix, [0, 0, -1]);
+      }
+      
       let button = new ButtonNode(new UrlTexture(''), callbackMaker("https://raw.githubusercontent.com/awaw3d/view/master/media/textures/chess-pano-4k.jpg"));
 	    
       mat4.identity(button.matrix);
@@ -204,7 +248,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, -1]);
       app.scene.addNode(button);
       window.button = button;
-      window.mat4 = mat4;
+      window.mat4 = mat4;*/
 
       // Start the XR application.
       app.run();
