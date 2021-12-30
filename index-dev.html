@@ -224,11 +224,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	  app.scene.clearNodes();
 	  app.scene.addNode(scene.skybox);
 	  for(let [buttonX, buttonY, buttonD, nextScene] of scene.buttons) {
-	      let button = new ButtonNode(new UrlTexture(''), );
-	        /*mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
-mat4.rotateY(button.matrix, button.matrix, Math.PI/2);
-mat4.rotateX(button.matrix, button.matrix, -Math.PI/6);
-mat4.translate(button.matrix, button.matrix, [0, 0, -1]);*/
+	      let button = new ButtonNode(new UrlTexture(''), showScene.bind(null, nextScene));
+	      mat4.identity(button.matrix);
+	      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
+              mat4.rotateY(button.matrix, button.matrix, buttonY*Math.PI/180);
+              mat4.rotateX(button.matrix, button.matrix, buttonX*Math.PI/180);
+              mat4.translate(button.matrix, button.matrix, [0, 0, -buttonD]);*/
 	  }
       }
       
