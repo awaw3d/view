@@ -220,9 +220,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
 	    
       function showScene(sname) {
-          let scene = scenes[name];
+          let scene = scenes[sname];
 	  app.scene.clearNodes();
-	  let stereo = QueryArgs.getString("stereo");
 	  app.scene.addNode(scene.skybox);
 	  for(let [buttonX, buttonY, buttonD, nextScene] of scene.buttons) {
 	      let button = new ButtonNode(new UrlTexture(''), );
