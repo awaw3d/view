@@ -127,11 +127,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       // if neither `url` nor `urls` is set, check for `scenes` and load those URLs
       if(!urlList) {
           window.scenes = JSON.parse(QueryArgs.getString("scenes"));
-	  urlList = scenes;
 	  // add `name` field to all scenes
 	  for(let sname in scenes) {
 	      scenes[sname].name = sname;	  
 	  }
+	  urlList = Object.vlaues(scenes);
       }
       
       if(typeof urlList == "string") {
