@@ -196,14 +196,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           });
 	  skyboxes.push(skybox);
 	      
-	  if(scenes) {
+	  if(typeof scenes != "undefined") {
               let scene = scenes[nextURL.name];
 	      scene.skybox = skybox;
 	      if(scene.name === "FIRST") {
 	          showScene("FIRST");
 	      }
 	  }
-          if(!scenes && !firstDone) { embedsDone(); firstDone = true; }
+          if(typeof scenes == "undefined" && !firstDone) { embedsDone(); firstDone = true; }
           nextoEmbed();
       }
       
