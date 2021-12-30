@@ -121,13 +121,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         if(document.getElementById("input-no-stereo").checked) { document.getElementById("input-no-stereo").disabled = "disabled"; }
       });
 
-      let scenes;
       let urlList = QueryArgs.getString("urls");
       if(!urlList) { urlList = QueryArgs.getString("url"); }
 	    
       // if neither `url` nor `urls` is set, check for `scenes` and load those URLs
       if(!urlList) {
-          scenes = JSON.parse(QueryArgs.getString("scenes"));
+          window.scenes = JSON.parse(QueryArgs.getString("scenes"));
 	  urlList = scenes;
 	  // add `name` field to all scenes
 	  for(let sname in scenes) {
@@ -224,23 +223,20 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           let scene = scenes[name];
 	  app.scene.clearNodes();
 	  let stereo = QueryArgs.getString("stereo");
-	  app.scene.addNode(new SkyboxNode({
-              url: url,
-              displayMode: stereo=="top"?'stereoTopBottom':stereo=="side"?'stereoLeftRight':'mono',
-              rotationY: Math.PI
-          }));
-	  for(button of scene.buttons) {
-	        
+	  app.scene.addNode(scene.skybox);
+	  for(let [buttonX, buttonY, buttonD, nextScene] of scene.buttons) {
+	      let button = new ButtonNode(new UrlTexture(''), );
+	        /*mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
+mat4.rotateY(button.matrix, button.matrix, Math.PI/2);
+mat4.rotateX(button.matrix, button.matrix, -Math.PI/6);
+mat4.translate(button.matrix, button.matrix, [0, 0, -1]);*/
 	  }
       }
       
       
 	      
 	      /*mat4.identity(button.matrix);
-mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
-mat4.rotateY(button.matrix, button.matrix, Math.PI/2);
-mat4.rotateX(button.matrix, button.matrix, -Math.PI/6);
-mat4.translate(button.matrix, button.matrix, [0, 0, -1]);
+
       }
       
       let button = new ButtonNode(new UrlTexture(''), callbackMaker("https://raw.githubusercontent.com/awaw3d/view/master/media/textures/chess-pano-4k.jpg"));
