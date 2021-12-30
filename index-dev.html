@@ -229,7 +229,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
               mat4.rotateY(button.matrix, button.matrix, buttonY*Math.PI/180);
               mat4.rotateX(button.matrix, button.matrix, buttonX*Math.PI/180);
-              mat4.translate(button.matrix, button.matrix, [0, 0, -buttonD]);*/
+              mat4.translate(button.matrix, button.matrix, [0, 0, -buttonD]);
+	      app.scene.addNode(button);
 	  }
       }
       
