@@ -127,14 +127,17 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	    
       // if neither `url` nor `urls` is set, check for `scenes` and load those URLs
       if(!urlList) {
-          scenes = JSON.parse(QueryArgs.getString("scenes").value);
-	  for(let [sname, scene] of Object.entries(scenes)) {
-	      urlList.push(scene.url);
+          scenes = JSON.parse(QueryArgs.getString("scenes"));
+	  urlList = scenes;
+	  // add `name` field to all scenes
+	  for(let sname in scenes) {
+	      scenes[sname].name = sname;	  
 	  }
       }
       
       if(typeof urlList == "string") {
-          urlList = urlList.split(",");
+          urlList = urlList.split(",").map((url,idx)=>({url:url, name:idx}));
+
       }
       
       // expects dims=WWWWxHHHH
@@ -152,12 +155,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           if(!urlList.length) { return; }
           nextURL = urlList.shift();
           // if this URL is a DeviantArt URL, use the oEmbed servie to get the image URL
-          if(nextURL.match(/^https?:\/\/sta\.sh\/|^https?:\/\/(www\.)?deviantart\.com\/|^https?:\/\/fav\.me\//)) {
+          if(nextURL.url.match(/^https?:\/\/sta\.sh\/|^https?:\/\/(www\.)?deviantart\.com\/|^https?:\/\/fav\.me\//)) {
               let s = document.createElement("script");
-              s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(nextURL)}&format=jsonp&callback=onDeviantFetch`
+              s.src = `https://backend.deviantart.com/oembed?url=${encodeURIComponent(nextURL.url)}&format=jsonp&callback=onDeviantFetch`
               document.body.appendChild(s);
           } else {
-              window.onDeviantFetch({ url: nextURL }, true);
+              window.onDeviantFetch(nextURL, true);
           }
       };
       
@@ -195,9 +198,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	  skyboxes.push(skybox);
 	      
 	  if(scenes) {
-              let scene = scenes.find(s=>s.url === nextURL);
+              let scene = scenes[nextURL.name];
 	      scene.skybox = skybox;
-	      if(scenes["FIRST"] === scene) {
+	      if(scenes.name ==== "FIRST") {
 	          showScene("FIRST");
 	      }
 	  }
