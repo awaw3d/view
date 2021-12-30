@@ -127,7 +127,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	    
       // if neither `url` nor `urls` is set, check for `scenes` and load those URLs
       if(!urlList) {
-          scenes = JSON.parse(document.getElementById("scenes").value);
+          scenes = JSON.parse(QueryArgs.getString("scenes").value);
 	  for(let [sname, scene] of Object.entries(scenes)) {
 	      urlList.push(scene.url);
 	  }
