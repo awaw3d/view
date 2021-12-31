@@ -223,7 +223,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           let scene = scenes[sname];
 	  app.scene.clearNodes();
 	  app.scene.addNode(scene.skybox);
-	  for(let [buttonX, buttonY, buttonD, nextScene] of scene.buttons) {
+	  for(let [buttonX, buttonY, buttonD, nextScene] of (scene.buttons || []) {
 	      let button = new ButtonNode(new UrlTexture(''), showScene.bind(null, nextScene));
 	      mat4.identity(button.matrix);
 	      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
@@ -236,17 +236,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       
 	      
-	      /*mat4.identity(button.matrix);
-
-      }
-      
-      let button = new ButtonNode(new UrlTexture(''), callbackMaker("https://raw.githubusercontent.com/awaw3d/view/master/media/textures/chess-pano-4k.jpg"));
-	    
-      mat4.identity(button.matrix);
-      //mat4.translate(button.matrix, button.matrix, [0, 0, 0]);
-      //mat4.rotateY(button.matrix, button.matrix, 0);
-      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, -1]);
-      app.scene.addNode(button);
+	      /*
       window.button = button;
       window.mat4 = mat4;*/
 
