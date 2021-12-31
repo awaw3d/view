@@ -213,6 +213,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let checkTexture = new UrlTexture('./media/textures/check-button.png');
       let xTexture = new UrlTexture('./media/textures/x-button.png');
 	    
+      let callbackMaker = (targetScene, buttonList, mode="mono") => {
+	      return () => {
+	          
+	      }
+      }
+	    
       function showScene(sname) {
           let scene = scenes[sname];
 	  app.scene.clearNodes();
@@ -228,7 +234,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	  }
       }
       
-	      /*
+      
+	      
+	      /*mat4.identity(button.matrix);
+
+      }
+      
+      let button = new ButtonNode(new UrlTexture(''), callbackMaker("https://raw.githubusercontent.com/awaw3d/view/master/media/textures/chess-pano-4k.jpg"));
+	    
+      mat4.identity(button.matrix);
+      //mat4.translate(button.matrix, button.matrix, [0, 0, 0]);
+      //mat4.rotateY(button.matrix, button.matrix, 0);
+      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, -1]);
+      app.scene.addNode(button);
       window.button = button;
       window.mat4 = mat4;*/
 
