@@ -224,7 +224,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	  // if we keep the aim dot, clear out all but first child; otherwise clear all
           if(document.getElementById("input-dot").checked) {
 	      app.scene.children.splice(1);
-	  }
+	  } else {
 	      app.scene.clearNodes();
           }
 	  app.scene.addNode(scene.skybox);
