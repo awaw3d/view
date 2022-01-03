@@ -100,3 +100,10 @@ canvas {
 #input-fov {
   width: 40px;
 }
+
+#button-holder {
+  float: right;
+  background-color: white;
+  border-radius: 55px;
+  width: 55px;
+}
