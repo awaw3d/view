@@ -11,11 +11,11 @@ header {
   z-index: 2;
   left: 0px;
   text-align: left;
-  max-width: 420px;
   padding: 0.5em;
   background-color: rgba(255, 255, 255, 0.90);
   margin-bottom: 0.5em;
   border-radius: 2px;
+  float:left;
 }
 
 details summary {
@@ -28,10 +28,13 @@ details p {
   margin: 7px;
 }
 
-/*details[open] summary {
-  font-size: 1.4em;
-  font-weight: bold;
-}*/
+details[open] {
+  width:360px;
+}
+
+details {
+  width: 100px;
+}
 
 header h1 {
   margin-top: 0px;
