@@ -106,4 +106,9 @@ canvas {
   background-color: white;
   border-radius: 55px;
   width: 55px;
+  overflow: hidden;
+}
+
+#button-holder .webvr-ui-button {
+  
 }
