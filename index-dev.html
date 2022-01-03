@@ -42,7 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <input type="text" id="input-dims" name="dims" placeholder="WWWWxHHHH"></p>
             <p>FOV: <input id='input-fov' min='20' max='150' step='1' value="70" name="fov" type='number'/>
             <p>Time: <input type="number" name="time" id="input-time" placeholder="10"> (slideshow)</p>
-	    <p>Aim UI: <input type="checkbox" name="aim" id="input-aim"></p>
+	    <p>Aim dot: <input type="checkbox" name="dot" id="input-dot"></p>
             <p><input type="submit" value="Update"></p>
           </form>
       </details>
@@ -170,7 +170,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       // after everything has loaded, loop this on a timer
       function embedsDone() {
 	  app.scene.removeNode(skyboxes[skyboxes.length-1]);
-	  
+	  if(!document.getElementById("input-dot").checked) {
+	      app.scene.clearNodes();
+	  }
           let nextBox = skyboxes.shift();
           skyboxes.push(nextBox);
           app.scene.addNode(nextBox);
@@ -213,20 +215,18 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
       
       nextoEmbed();
-	    
-      
+
       let checkTexture = new UrlTexture('./media/textures/check-button.png');
       let xTexture = new UrlTexture('./media/textures/x-button.png');
 	    
-      let callbackMaker = (targetScene, buttonList, mode="mono") => {
-	      return () => {
-	          
-	      }
-      }
-	    
       function showScene(sname) {
           let scene = scenes[sname];
-	  app.scene.clearNodes();
+	  // if we keep the aim dot, clear out all but first child; otherwise clear all
+          if(document.getElementById("input-dot").checked) {
+	      app.scene.children.splice(1);
+	  }
+	      app.scene.clearNodes();
+          }
 	  app.scene.addNode(scene.skybox);
 	  for(let [buttonX, buttonY, buttonD, nextScene] of (scene.buttons || [])) {
 	      let button = new ButtonNode(new UrlTexture(''), showScene.bind(null, nextScene));
