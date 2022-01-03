@@ -34,14 +34,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       <details>
         <summary>Settings</summary>
           <form id="controls">
-            <p>URL (or comma-separated list, for slideshow):<br><textarea name="urls" placeholder="URLs" id="input-urls"></textarea></p>
+            <p>URL (or comma-separated list, for slideshow):<br><textarea name="urls" placeholder="URLs, or scene JSON" id="input-urls"></textarea></p>
             <p><input type="radio" name="stereo" value="none" id="input-no-stereo"> <label for="input-no-stereo">No Stereo</label>
             <input type="radio" name="stereo" value="side" id="input-side-stereo"> <label for="input-side-stereo">Side</label>
             <input type="radio" name="stereo" value="top" id="input-top-stereo"> <label for="input-top-stereo">Top</label></p>
             <p>Dimensions (optional, for quality)<br>
             <input type="text" id="input-dims" name="dims" placeholder="WWWWxHHHH"></p>
             <p>FOV: <input id='input-fov' min='20' max='150' step='1' value="70" name="fov" type='number'/>
-            <p>Time: <input type="number" name="time" id="input-time" placeholder="10"> (slideshow only)</p>
+            <p>Time: <input type="number" name="time" id="input-time" placeholder="10"> (slideshow)</p>
 	    <p>Aim UI: <input type="checkbox" name="aim" id="input-aim"></p>
             <p><input type="submit" value="Update"></p>
           </form>
@@ -124,6 +124,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       let urlList = QueryArgs.getString("urls");
       if(!urlList) { urlList = QueryArgs.getString("url"); }
+      if(!urlList) { urlList = QueryArgs.getString("scenes"); }
 	    
       // if neither `url` nor `urls` is set, check for `scenes` and load those URLs
       try {
