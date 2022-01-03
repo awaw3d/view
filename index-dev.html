@@ -47,6 +47,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           </form>
       </details>
     </header>
+	  <div style="float: right;" id="button-holder"></div>
     <script type="module">
       import {WebXRSampleApp} from './js/webxr-sample-app.js';
       import {UrlTexture} from './js/render/core/texture.js';
@@ -68,7 +69,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
         referenceSpace: 'local-floor'
       });
       app.scene.enableStats(false);
-      document.querySelector('header').appendChild(app.xrButton.domElement);
+      document.querySelector('#button-holder').appendChild(app.xrButton.domElement);
+      app.xrButton.domElement.children[0].style.display = "none";
       window.app = app;
       var oldOnSessionStarted = app.onSessionStarted;
       app.onSessionStarted = function(session) {
