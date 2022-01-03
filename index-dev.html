@@ -1,7 +1,7 @@
 <!doctype html>
 <!--
 Copyright 2018 The Immersive Web Community Group
-Copyright 2020, 2021 awaw
+Copyright 2020, 2021, 2022 awaw
 Permission is hereby granted, free of charge, to any person obtaining a copy of
 this software and associated documentation files (the "Software"), to deal in
 the Software without restriction, including without limitation the rights to
@@ -34,7 +34,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       <details>
         <summary>Settings</summary>
           <form id="controls">
-            <p>URL (or comma-separated list, for slideshow):<br><input type="text" name="urls" placeholder="URLs" id="input-urls"></p>
+            <p>URL (or comma-separated list, for slideshow):<br><textarea name="urls" placeholder="URLs" id="input-urls"></p>
             <p><input type="radio" name="stereo" value="none" id="input-no-stereo"> <label for="input-no-stereo">No Stereo</label>
             <input type="radio" name="stereo" value="side" id="input-side-stereo"> <label for="input-side-stereo">Side</label>
             <input type="radio" name="stereo" value="top" id="input-top-stereo"> <label for="input-top-stereo">Top</label></p>
@@ -42,6 +42,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             <input type="text" id="input-dims" name="dims" placeholder="WWWWxHHHH"></p>
             <p>FOV: <input id='input-fov' min='20' max='150' step='1' value="70" name="fov" type='number'/>
             <p>Time: <input type="number" name="time" id="input-time" placeholder="10"> (slideshow only)</p>
+	    <p>Aim UI: <input type="checkbox" name="aim" id="input-aim"></p>
             <p><input type="submit" value="Update"></p>
           </form>
       </details>
@@ -166,6 +167,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       // after everything has loaded, loop this on a timer
       function embedsDone() {
 	  app.scene.removeNode(skyboxes[skyboxes.length-1]);
+	  
           let nextBox = skyboxes.shift();
           skyboxes.push(nextBox);
           app.scene.addNode(nextBox);
