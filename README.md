@@ -25,9 +25,9 @@ A simple configuration might look like:
             ]
         },
         "upward": {
-            "url": "https://deviantart.com/someOtherURL",
+            "url": "https://deviantart.com/stillSomeOtherURL",
             "buttons": [
-                [45, 180, 10, "FIRST"]
+                [-45, 180, 10, "FIRST"]
             ]
         }
      }
@@ -38,7 +38,7 @@ The `url` property indicates where each scene should get its 360 image. This URL
 
 The `buttons` property has a list of buttons. Each button is a list, with each item being:
 
-1. Y rotation - in the sphere of the scene, this rotates the button up ro down to some lattitude. The value is **rotation in degrees** and can be negative to down or positive to go up.
+1. Y rotation - in the sphere of the scene, this rotates the button up or down to some lattitude. The value is **rotation in degrees** and can be negative to down or positive to go up.
 2. X rotation - after rotating to the specified latitude, next rotate the button around the circle of that lattitude band. Also rotation in degrees, positive/negative for left/right.
 3. Depth - how far to move the button away from the viewer. Get too close appears to cause parallax/stereoscopic problems; a distance of `10` works well enough.
 4. Name of next scene - when this button is clicked, natigate to the named scene.
@@ -46,7 +46,7 @@ The `buttons` property has a list of buttons. Each button is a list, with each i
 The button `[45, -45, 10, "upward"]` says
 
     45 degrees up (halfway between the equator and the north pole),
-    then 45 degrees to the right at that lattitude,
+    then 45 degrees to the right along that lattitude,
     project outward 10 distance units, and
     go to the scene named "upward" when clicked
     
