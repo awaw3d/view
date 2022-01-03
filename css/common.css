@@ -111,5 +111,11 @@ canvas {
 }
 
 #button-holder .webvr-ui-logo {
-  left: -10px;
+  left: -8px;
+}
+
+#button-holder .webvr-ui-button {
+    position: relative;
+    top: -2px;
+    left: -2px;
 }
