@@ -112,6 +112,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       document.getElementById("input-time").value = QueryArgs.getString("time", "");
       (document.getElementById("input-"+QueryArgs.getString("stereo")+"-stereo") ||
        document.getElementById("input-no-stereo")).checked = true;
+      document.getElementById("input-dot").checked = !!QueryArgs.getString("dot", "");
       
       document.getElementById("input-fov").addEventListener('change', updateFov);
       updateFov();
