@@ -224,7 +224,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       c.width=50;
       var ctx = c.getContext("2d");
       ctx.fillText("hello", 0, 10);
-      var data = c.toDataURL()
+      var data = c.toDataURL();
 	    
       function showScene(sname) {
           let scene = scenes[sname];
@@ -236,7 +236,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           }
 	  app.scene.addNode(scene.skybox);
 	  for(let [buttonX, buttonY, buttonD, nextScene] of (scene.buttons || [])) {
-	      let button = new ButtonNode(new UrlTexture(data), showScene.bind(null, nextScene));
+	      let button = new ButtonNode(new UrlTexture("https://awaw3d.github.io/view/media/textures/check-button.png"), showScene.bind(null, nextScene));
 	      mat4.identity(button.matrix);
 	      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
               mat4.rotateY(button.matrix, button.matrix, buttonY*Math.PI/180);
