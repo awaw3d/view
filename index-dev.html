@@ -217,8 +217,14 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       nextoEmbed();
 
-      let checkTexture = new UrlTexture('./media/textures/check-button.png');
-      let xTexture = new UrlTexture('./media/textures/x-button.png');
+      //let checkTexture = new UrlTexture('./media/textures/check-button.png');
+      //let xTexture = new UrlTexture('./media/textures/x-button.png');
+      c = document.createElement("canvas"),
+      c.height=12;
+      c.width=50;
+      ctx = c.getContext("2d");
+      ctx.fillText("hello", 0, 10);
+      var data = c.toDataURL()
 	    
       function showScene(sname) {
           let scene = scenes[sname];
@@ -230,7 +236,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           }
 	  app.scene.addNode(scene.skybox);
 	  for(let [buttonX, buttonY, buttonD, nextScene] of (scene.buttons || [])) {
-	      let button = new ButtonNode(new UrlTexture(''), showScene.bind(null, nextScene));
+	      let button = new ButtonNode(new UrlTexture(data), showScene.bind(null, nextScene));
 	      mat4.identity(button.matrix);
 	      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
               mat4.rotateY(button.matrix, button.matrix, buttonY*Math.PI/180);
