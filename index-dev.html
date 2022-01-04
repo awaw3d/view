@@ -220,9 +220,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       //let checkTexture = new UrlTexture('./media/textures/check-button.png');
       //let xTexture = new UrlTexture('./media/textures/x-button.png');
       var c = document.createElement("canvas");
-      c.height=12;
-      c.width=50;
+      c.height=1200;
+      c.width=5000;
       var ctx = c.getContext("2d");
+      ctx.font = "1200px sans-serif";
       ctx.fillText("hello", 0, 10);
       var data = c.toDataURL();
 	    
