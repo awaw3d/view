@@ -215,7 +215,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           nextoEmbed();
       }
       
-      nextoEmbed();
+      
 
       //let checkTexture = new UrlTexture('./media/textures/check-button.png');
       //let xTexture = new UrlTexture('./media/textures/x-button.png');
@@ -225,7 +225,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       var ctx = c.getContext("2d");
       ctx.font = "1200px sans-serif";
       ctx.fillText("hello", 0, 10);
-      var data = c.toDataURL();
+      c.toBlob(b=>{
+          window.textData = URL.createDataURL(b);
+          nextoEmbed();
+      });
 	    
       function showScene(sname) {
           let scene = scenes[sname];
@@ -237,7 +240,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           }
 	  app.scene.addNode(scene.skybox);
 	  for(let [buttonX, buttonY, buttonD, nextScene] of (scene.buttons || [])) {
-	      let button = new ButtonNode(new UrlTexture("https://awaw3d.github.io/view/media/textures/check-button.png"), showScene.bind(null, nextScene));
+	      let button = new ButtonNode(new UrlTexture(textData), showScene.bind(null, nextScene));
 	      mat4.identity(button.matrix);
 	      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
               mat4.rotateY(button.matrix, button.matrix, buttonY*Math.PI/180);
