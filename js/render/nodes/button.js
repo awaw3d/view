@@ -27,7 +27,7 @@ import {PrimitiveStream} from '../geometry/primitive-stream.js';
 const BUTTON_SIZE = 0.8;
 const BUTTON_CORNER_RADIUS = 0.4;
 const BUTTON_CORNER_SEGMENTS = 8;
-const BUTTON_ICON_SIZE = 0.07;
+const BUTTON_ICON_SIZE = 0.8;
 const BUTTON_LAYER_DISTANCE = 0.005;
 const BUTTON_COLOR = 0.75;
 const BUTTON_ALPHA = 0.2;
