@@ -1,0 +1,101 @@
+<html>
+<head>
+<style>
+.scene {
+    background-color: #77F;
+	border: thin solid #336;
+	padding: 4px;
+	margin: 5px 0;
+	font-weight:bold;
+}
+
+.button {
+    background-color: #7A7;
+	border: thin solid #363;
+	padding: 4px;
+	margin: 5px;
+	display: inline-block;
+}
+.button td {
+   text-align: center;
+}
+.button input {
+    width: 40px;
+}
+.button input[name=target] {
+    width: 60px;
+}
+.removebutton {
+    float: right;
+}
+.removescene {
+    float: right;
+}
+</style>
+</head>
+<body>
+<button id="addscene">+ Add Scene</button>
+<hr>
+<button id="save">vv Save to JSON vv</button> | <button id="load">^^ Load from JSON ^^</button><br>
+<textarea id="jsonbody"></textarea>
+<script>
+document.body.addEventListener("click", function(e) {
+    if(e.target.className === "addbutton") {
+        addButton(e.target.nextElementSibling);
+	}
+	if(e.target.className === "removebutton") {
+        e.target.parentNode.remove();
+	}
+	if(e.target.id === "addscene") {
+	    addScene();
+	}
+    if(e.target.className === "removescene") {
+        e.target.parentNode.remove();
+	}
+})
+
+function addButton(node, buttonX, buttonY, buttonD, nextScene) {
+	var newButton = document.createElement("div");
+	newButton.className = "button";
+	newButton.innerHTML = "<button class='removebutton'>x</button><table><tr><td>Lat</td><td>Lng</td><td>Dist</td><td>Target</td></tr><td><input name='lat'></td><td><input name='lng'></td><td><input name='dist'></td><td><input name='target'></td><tr></tr></table>";
+	node.appendChild(newButton);
+	for(let arg of [["lat",buttonX],["lng",buttonY],["dist",buttonD],["target",nextScene]]) {
+	    if(arg[1] !== undefined) { newButton.querySelector("[name="+arg[0]+"]").value = arg[1]; }
+	}
+	return newButton;
+}
+
+function addScene(name, url, buttons) {
+	var newScene = document.createElement("div");
+	newScene.className = "scene";
+	newScene.innerHTML = `<button class='removescene'>x</button><div>Name: <input class="scenename"></div>
+        <div>URL: <input class="sceneurl"></div>
+        <div>Buttons: <button class="addbutton">+ Add Button</button>
+	        <div class="buttonlist"></div>
+        </div>`;
+	if(name) { newScene.querySelector(".scenename").value = name; }
+	if(url) { newScene.querySelector(".sceneurl").value = url; }
+	if(buttons) {
+	    for(let button of buttons) {
+		    addButton(newScene.querySelector(".buttonlist"), ...button);
+		}
+	}
+    document.body.insertBefore(newScene, addscene);
+}
+
+document.querySelector("#load").addEventListener("click", loadJSON);
+function loadJSON() {
+    try {
+	    var data = JSON.parse(jsonbody.value);
+	} catch(e) {
+	    return alert("Cannot load: invalid format for JSON data.");
+	}
+	
+	for(var name in data) {
+	    var scene = data[name];
+		addScene(name, scene.url, scene.buttons);
+	}
+}
+</script>
+</body>
+</html>
