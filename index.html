@@ -221,6 +221,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       let xTexture = new UrlTexture('./media/textures/x-button.png');
 	    
       function showScene(sname) {
+	  console.log("showing " + sname);
           let scene = scenes[sname];
 	  // if we keep the aim dot, clear out all but first child; otherwise clear all
           if(document.getElementById("input-dot").checked) {
@@ -240,11 +241,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	  }
       }
       
-      
-	      
-	      /*
-      window.button = button;
-      window.mat4 = mat4;*/
+      window.showScene = showScene;
 
       // Start the XR application.
       app.run();
