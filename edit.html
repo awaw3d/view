@@ -2,7 +2,8 @@
 <head>
 <style>
 .scene {
-    background-color: #77F;
+    font-family: sans-serif;
+    background-color: #aaF;
 	border: thin solid #336;
 	padding: 4px;
 	margin: 5px 0;
@@ -22,7 +23,7 @@
 .button input {
     width: 40px;
 }
-.button input[name=target] {
+.button input.target {
     width: 60px;
 }
 .removebutton {
@@ -30,6 +31,10 @@
 }
 .removescene {
     float: right;
+}
+#jsonbody {
+    width:100%;
+	height: 75px;
 }
 </style>
 </head>
@@ -57,10 +62,10 @@ document.body.addEventListener("click", function(e) {
 function addButton(node, buttonX, buttonY, buttonD, nextScene) {
 	var newButton = document.createElement("div");
 	newButton.className = "button";
-	newButton.innerHTML = "<button class='removebutton'>x</button><table><tr><td>Lat</td><td>Lng</td><td>Dist</td><td>Target</td></tr><td><input name='lat'></td><td><input name='lng'></td><td><input name='dist'></td><td><input name='target'></td><tr></tr></table>";
+	newButton.innerHTML = "<button class='removebutton'>x</button><table><tr><td>Lat</td><td>Lng</td><td>Dist</td><td>Target</td></tr><td><input class='lat'></td><td><input class='lng'></td><td><input class='dist'></td><td><input class='target'></td><tr></tr></table>";
 	node.appendChild(newButton);
 	for(let arg of [["lat",buttonX],["lng",buttonY],["dist",buttonD],["target",nextScene]]) {
-	    if(arg[1] !== undefined) { newButton.querySelector("[name="+arg[0]+"]").value = arg[1]; }
+	    if(arg[1] !== undefined) { newButton.querySelector("."+arg[0]).value = arg[1]; }
 	}
 	return newButton;
 }
@@ -95,6 +100,24 @@ function loadJSON() {
 	    var scene = data[name];
 		addScene(name, scene.url, scene.buttons);
 	}
+}
+
+document.querySelector("#save").addEventListener("click", saveJSON);
+function saveJSON() {
+    var output = Object.create(null);
+
+    for(let scene of [...document.querySelectorAll(".scene")]) {
+	    let scenename = scene.querySelector(".scenename").value;
+	    if(scenename in output) { alert("Warning: duplicate scene name: " + scenename); }
+	    let sceneObj = output[scenename] = Object.create(null);
+		sceneObj["url"] = scene.querySelector(".sceneurl").value;
+		sceneObj["buttons"] = [];
+		for(let button of [...scene.querySelectorAll(".button")]) {
+		    sceneObj["buttons"].push([button.querySelector(".lat").value,button.querySelector(".lng").value,button.querySelector(".dist").value,button.querySelector(".target").value]); 
+		}
+	}
+
+	jsonbody.value = JSON.stringify(output);
 }
 </script>
 </body>
