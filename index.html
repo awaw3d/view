@@ -229,7 +229,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	  } else {
 	      app.scene.clearNodes();
           }
-	  app.scene.children.push(scene.skybox);
+	  app.scene.addNode(scene.skybox);
 	  for(let [buttonX, buttonY, buttonD, nextScene] of (scene.buttons || [])) {
 	      let button = new ButtonNode(new UrlTexture(''), showScene.bind(null, nextScene));
 	      mat4.identity(button.matrix);
