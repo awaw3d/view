@@ -151,7 +151,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           if(dims.length != 2) { dims = undefined; }
       }
       
-      window.skyboxes = [];
+      let skyboxes = [];
+      let shownSkyboxes = [];
       let firstDone = false;
       let nextURL;
 	    
@@ -170,18 +171,19 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       // after everything has loaded, loop this on a timer
       function embedsDone() {
-	  console.log("removing skybox", skyboxes[skyboxes.length-1]);
-	  console.log("before removal", app.scene.children);
 	  app.scene.removeNode(skyboxes[skyboxes.length-1]);
 	  if(!document.getElementById("input-dot").checked) {
 	      app.scene.clearNodes();
 	  }
-	  console.log("after removal", app.scene.children);
-	  console.log("skyboxes before shift", skyboxes.map(x=>x.url))
+
+          // if skybox list is empty, restart the slideshow: refill with past skyboxes
+	  if(skyboxes.length === 0) {
+              skyboxes = shownSkyboxes;
+              shownSkyboxes = [];
+	  }
+
           let nextBox = skyboxes.shift();
-	  console.log("skyboxes after shift", skyboxes.map(x=>x.url))
-          skyboxes.push(nextBox);
-	  console.log("skyboxes after push", skyboxes.map(x=>x.url))
+          shownSkyboxes.push(nextBox);
           app.scene.addNode(nextBox);
 	  // if time is default or non-negative, step through slideshow
 	  let time = QueryArgs.getInt("time");
@@ -224,16 +226,16 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
       //let checkTexture = new UrlTexture('./media/textures/check-button.png');
       //let xTexture = new UrlTexture('./media/textures/x-button.png');
-      var c = document.createElement("canvas");
+      /*var c = document.createElement("canvas");
       c.height=1200;
       c.width=2500;
       var ctx = c.getContext("2d");
       ctx.font = "1200px sans-serif";
-      ctx.fillText("hello", 0, 1100);
-      c.toBlob(b=>{
-          window.textData = URL.createObjectURL(b);
+      ctx.fillText("hello", 0, 1100);*/
+      //c.toBlob(b=>{
+      //    window.textData = URL.createObjectURL(b);
           nextoEmbed();
-      });
+      //});
 	    
       function showScene(sname) {
           let scene = scenes[sname];
