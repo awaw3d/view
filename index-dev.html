@@ -151,7 +151,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           if(dims.length != 2) { dims = undefined; }
       }
       
-      let skyboxes = [];
+      window.skyboxes = [];
       let firstDone = false;
       let nextURL;
 	    
@@ -170,10 +170,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       // after everything has loaded, loop this on a timer
       function embedsDone() {
+	  console.log("removing skybox", skyboxes[skyboxes.length-1]);
+	  console.log("before removal", app.scene.children);
 	  app.scene.removeNode(skyboxes[skyboxes.length-1]);
 	  if(!document.getElementById("input-dot").checked) {
 	      app.scene.clearNodes();
 	  }
+	  console.log("after removal", app.scene.children);
           let nextBox = skyboxes.shift();
           skyboxes.push(nextBox);
           app.scene.addNode(nextBox);
@@ -189,7 +192,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           // and if `dims` are provided, scale `w_XXXX` and `h_XXXX` to those dimensions
           if(!isDirectCall) {
             response.url = response.url.replace(/,q_\d+/, ",q_100");
-            if(dims) {
+            // don't set dims on sta.sh URLs; the oEmbed service does not support them 
+            if(dims && !nextURL.url.match(/^https?:\/\/sta\.sh\/)) {
                response.url = response.url.replace(/fill\/w_\d+,h_\d+/, "fill/w_"+dims[0]+",h_"+dims[1]);
             }
           }
@@ -201,7 +205,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
             url: response.url,
             displayMode: stereo=="top"?'stereoTopBottom':stereo=="side"?'stereoLeftRight':'mono',
             rotationY: Math.PI
-          });       000.
+          });
 	  skyboxes.push(skybox);
 	      
 	  if(typeof scenes != "undefined") {
@@ -214,8 +218,6 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           if(typeof scenes == "undefined" && !firstDone) { embedsDone(); firstDone = true; }
           nextoEmbed();
       }
-      
-      
 
       //let checkTexture = new UrlTexture('./media/textures/check-button.png');
       //let xTexture = new UrlTexture('./media/textures/x-button.png');
@@ -251,10 +253,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	      app.scene.addNode(button);
 	  }
       }
-      
-      
-	      
-	      /*
+ 
+      /*
       window.button = button;
       window.mat4 = mat4;*/
 
