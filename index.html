@@ -152,6 +152,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       }
       
       let skyboxes = [];
+      let shownSkyboxes = [];
       let firstDone = false;
       let nextURL;
 	    
@@ -174,8 +175,15 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	  if(!document.getElementById("input-dot").checked) {
 	      app.scene.clearNodes();
 	  }
+
+          // if skybox list is empty, restart the slideshow: refill with past skyboxes
+	  if(skyboxes.length === 0) {
+              skyboxes = shownSkyboxes;
+              shownSkyboxes = [];
+	  }
+
           let nextBox = skyboxes.shift();
-          skyboxes.push(nextBox);
+          shownSkyboxes.push(nextBox);
           app.scene.addNode(nextBox);
 	  // if time is default or non-negative, step through slideshow
 	  let time = QueryArgs.getInt("time");
@@ -189,7 +197,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           // and if `dims` are provided, scale `w_XXXX` and `h_XXXX` to those dimensions
           if(!isDirectCall) {
             response.url = response.url.replace(/,q_\d+/, ",q_100");
-            if(dims) {
+            // don't set dims on sta.sh URLs; the oEmbed service does not support them 
+            if(dims && !nextURL.url.match(/^https?:\/\/sta\.sh\//)) {
                response.url = response.url.replace(/fill\/w_\d+,h_\d+/, "fill/w_"+dims[0]+",h_"+dims[1]);
             }
           }
@@ -214,14 +223,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           if(typeof scenes == "undefined" && !firstDone) { embedsDone(); firstDone = true; }
           nextoEmbed();
       }
-      
-      nextoEmbed();
 
-      let checkTexture = new UrlTexture('./media/textures/check-button.png');
-      let xTexture = new UrlTexture('./media/textures/x-button.png');
+      nextoEmbed();
 	    
       function showScene(sname) {
-	  console.log("showing " + sname);
           let scene = scenes[sname];
 	  // if we keep the aim dot, clear out all but first child; otherwise clear all
           if(document.getElementById("input-dot").checked) {
@@ -233,7 +238,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           }
 	  app.scene.addNode(scene.skybox);
 	  for(let [buttonX, buttonY, buttonD, nextScene] of (scene.buttons || [])) {
-	      let button = new ButtonNode(new UrlTexture(''), showScene.bind(null, nextScene));
+	      let button = new ButtonNode(new UrlTexture(textData), showScene.bind(null, nextScene));
 	      mat4.identity(button.matrix);
 	      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
               mat4.rotateY(button.matrix, button.matrix, buttonY*Math.PI/180);
@@ -242,8 +247,10 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	      app.scene.addNode(button);
 	  }
       }
-      
-      window.showScene = showScene;
+ 
+      /*
+      window.button = button;
+      window.mat4 = mat4;*/
 
       // Start the XR application.
       app.run();
