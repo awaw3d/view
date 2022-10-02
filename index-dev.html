@@ -177,8 +177,11 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	      app.scene.clearNodes();
 	  }
 	  console.log("after removal", app.scene.children);
+	  console.log("skyboxes before shift", skyboxes.map(x=>x.url))
           let nextBox = skyboxes.shift();
+	  console.log("skyboxes after shift", skyboxes.map(x=>x.url))
           skyboxes.push(nextBox);
+	  console.log("skyboxes after push", skyboxes.map(x=>x.url))
           app.scene.addNode(nextBox);
 	  // if time is default or non-negative, step through slideshow
 	  let time = QueryArgs.getInt("time");
