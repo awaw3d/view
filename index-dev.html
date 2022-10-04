@@ -173,6 +173,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       function embedsDone() {
 	  app.scene.removeNode(skyboxes[skyboxes.length-1]);
 	  if(!document.getElementById("input-dot").checked) {
+              console.log("clearing nodes");
 	      app.scene.clearNodes();
 	  }
 
