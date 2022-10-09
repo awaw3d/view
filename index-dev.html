@@ -171,13 +171,13 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       
       // after everything has loaded, loop this on a timer
       function embedsDone() {
-	  app.scene.removeNode(skyboxes[skyboxes.length-1]);
-	  if(!document.getElementById("input-dot").checked) {
-              console.log("clearing nodes", app.scene.children.length);
-	      app.scene.clearNodes();
-              console.log("cleared nodes", app.scene.children.length);
+          var dots = [];
+	  if(document.getElementById("input-dot").checked) {
+	      dots = app.scene.children.filter(x=>x.constructor != SkyboxNode);
 	  }
-
+          app.scene.clearNodes();
+	  app.scene.children = app.scene.children.concat(dots);
+	      
           // if skybox list is empty, restart the slideshow: refill with past skyboxes
 	  if(skyboxes.length === 0) {
               skyboxes = shownSkyboxes;
@@ -187,7 +187,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           let nextBox = skyboxes.shift();
           shownSkyboxes.push(nextBox);
           app.scene.addNode(nextBox);
-          setTimeout(t=>app.scene.children.filter(x=>x.constructor==SkyboxNode), 4)
+	      
+          // clear out input dot in 4 ms from now, which is sometimes not added right now
+          if(!document.getElementById("input-dot").checked) {
+              setTimeout(t=>app.scene.children = app.scene.children.filter(x=>x.constructor==SkyboxNode), 4)
+	  }
+
 	  // if time is default or non-negative, step through slideshow
 	  let time = QueryArgs.getInt("time");
 	  if(!time || time >= 0) {
