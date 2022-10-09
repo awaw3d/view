@@ -187,6 +187,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           let nextBox = skyboxes.shift();
           shownSkyboxes.push(nextBox);
           app.scene.addNode(nextBox);
+          setTimeout(t=>app.scene.children.filter(x=>x.constructor==SkyboxNode), 4)
 	  // if time is default or non-negative, step through slideshow
 	  let time = QueryArgs.getInt("time");
 	  if(!time || time >= 0) {
