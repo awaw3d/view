@@ -173,8 +173,9 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       function embedsDone() {
 	  app.scene.removeNode(skyboxes[skyboxes.length-1]);
 	  if(!document.getElementById("input-dot").checked) {
-              console.log("clearing nodes");
+              console.log("clearing nodes", app.scene.children.length);
 	      app.scene.clearNodes();
+              console.log("cleared nodes", app.scene.children.length);
 	  }
 
           // if skybox list is empty, restart the slideshow: refill with past skyboxes
