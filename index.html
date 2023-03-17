@@ -245,8 +245,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	      app.scene.clearNodes();
           }
 	  app.scene.addNode(scene.skybox);
-	  for(let [buttonX, buttonY, buttonD, nextScene] of (scene.buttons || [])) {
-	      let button = new ButtonNode(new UrlTexture(textData), showScene.bind(null, nextScene));
+	  for(let [buttonX, buttonY, buttonD, nextScene, textData] of (scene.buttons || [])) {
+	      let button = new ButtonNode(new UrlTexture(textData || ""), showScene.bind(null, nextScene));
 	      mat4.identity(button.matrix);
 	      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
               mat4.rotateY(button.matrix, button.matrix, buttonY*Math.PI/180);
