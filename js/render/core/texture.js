@@ -53,6 +53,10 @@ export class Texture {
   get textureKey() {
     return null;
   }
+
+  get isExternal() {
+    return false;
+  }
 }
 
 export class ImageTexture extends Texture {
@@ -121,7 +125,6 @@ export class ImageTexture extends Texture {
 export class UrlTexture extends ImageTexture {
   constructor(url) {
     let img = new Image();
-    img.crossOrigin = "Anonymous";
     super(img);
     img.src = url;
   }
@@ -206,6 +209,22 @@ export class DataTexture extends Texture {
 
   get textureKey() {
     return this._key;
+  }
+}
+
+export class ExternalTexture extends Texture {
+  constructor(key) {
+    super();
+
+    this._key = key;
+  }
+
+  get textureKey() {
+    return this._key;
+  }
+
+  get isExternal() {
+    return true;
   }
 }
 
