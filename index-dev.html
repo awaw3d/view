@@ -66,7 +66,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	  
 	  // WebXR sample app setup
       let app = new WebXRSampleApp({
-        referenceSpace: 'local-floor'
+        referenceSpace: 'local-floor',
+        immersiveMode: "inline"
       });
       app.scene.enableStats(false);
       document.querySelector('#button-holder').appendChild(app.xrButton.domElement);
