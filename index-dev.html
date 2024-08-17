@@ -49,7 +49,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
       <div id="button-holder"></div>
     </header>
     <script type="module">
-      import {WebXRSampleApp} from './js/webxr-sample-app.js';
+      import {WebXRSampleApp} from './jss/webxr-sample-app-dev.js';
       import {UrlTexture} from './js/render/core/texture.js';
       import {ButtonNode} from './js/render/nodes/button.js';
       import {Gltf2Node} from './js/render/nodes/gltf2.js';
@@ -232,18 +232,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
           nextoEmbed();
       }
 
-      //let checkTexture = new UrlTexture('./media/textures/check-button.png');
-      //let xTexture = new UrlTexture('./media/textures/x-button.png');
-      /*var c = document.createElement("canvas");
-      c.height=1200;
-      c.width=2500;
-      var ctx = c.getContext("2d");
-      ctx.font = "1200px sans-serif";
-      ctx.fillText("hello", 0, 1100);*/
-      //c.toBlob(b=>{
-      //    window.textData = URL.createObjectURL(b);
-          nextoEmbed();
-      //});
+      nextoEmbed();
 	    
       function showScene(sname) {
           let scene = scenes[sname];
@@ -256,8 +245,8 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	      app.scene.clearNodes();
           }
 	  app.scene.addNode(scene.skybox);
-	  for(let [buttonX, buttonY, buttonD, nextScene] of (scene.buttons || [])) {
-	      let button = new ButtonNode(new UrlTexture(textData), showScene.bind(null, nextScene));
+	  for(let [buttonX, buttonY, buttonD, nextScene, textData] of (scene.buttons || [])) {
+	      let button = new ButtonNode(new UrlTexture(textData || ""), showScene.bind(null, nextScene));
 	      mat4.identity(button.matrix);
 	      mat4.translate(button.matrix, button.matrix, [0, Math.PI/2, 0]);
               mat4.rotateY(button.matrix, button.matrix, buttonY*Math.PI/180);
@@ -266,10 +255,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 	      app.scene.addNode(button);
 	  }
       }
- 
-      /*
-      window.button = button;
-      window.mat4 = mat4;*/
+
 
       // Start the XR application.
       app.run();
